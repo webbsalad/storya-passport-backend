@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package passport;
+
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/webbsalad/storya-passport-backend/passport;passport";
+
+message Passport {
+    string user_id = 1 [(validate.rules).string.uuid = true];
+    string name = 2 [(validate.rules).string = {
+        min_len: 3,
+        max_len: 30
+    }];
+    string password_hash = 3;
+    google.protobuf.Timestamp created_at = 4;
+}

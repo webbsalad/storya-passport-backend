@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package passport;
+
+import "api/passport/passport.proto";
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/webbsalad/storya-passport-backend/passport;passport";
+
+service PassportService {
+    rpc Register(AuthInfo) returns (AuthTokens) {
+        option (google.api.http) = {
+            post: "/register",
+            body: "*"
+        };
+    };
+
+    rpc Login(AuthInfo) returns (AuthTokens) {
+        option (google.api.http) = {
+            post: "/login",
+            body: "*"
+        };
+    };      
+
+    rpc RefreshTokens(Token) returns (AuthTokens) {
+        option (google.api.http) = {
+            post: "/refresh",
+            body: "*"
+        };
+    };
+
+    rpc GetUser(UserID) returns (Passport) {
+        option (google.api.http) = {
+            get: "/users/{user_id}"
+        };
+    };
+
+    rpc UpdateUser(UpdateUserRequest) returns (Passport) {
+        option (google.api.http) = {
+            patch: "/users/{user_id}",
+            body: "*"
+        };
+    };
+
+    rpc DeleteUser(UserID) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/users/{user_id}"
+        };
+    };
+
+    rpc CheckToken(Token) returns (UserID) {
+        option (google.api.http) = {
+            post: "/check",
+            body: "*"
+        };
+    };
+}
+
+message AuthInfo {
+    string name = 1 [(validate.rules).string = {
+        min_len: 3,
+        max_len: 30
+    }];
+    string password = 2 [(validate.rules).string = {
+        min_len: 7,
+        max_len: 30
+    }];
+}
+
+message Token {
+    string token = 1;
+}
+
+message UserID {
+    string user_id = 1 [(validate.rules).string.uuid = true];
+}
+
+message UpdateUserRequest {
+    string user_id = 1 [(validate.rules).string.uuid = true];
+    string name = 2 [(validate.rules).string = {
+        min_len: 3,
+        max_len: 30
+    }];
+    string password = 3 [(validate.rules).string = {
+        min_len: 7,
+        max_len: 30
+    }];
+}
+
+message AuthTokens {
+    string refresh_token = 1;
+    string access_token = 2;
+}
