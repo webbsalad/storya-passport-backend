@@ -10,28 +10,28 @@ import "google/protobuf/empty.proto";
 option go_package = "github.com/webbsalad/storya-passport-backend/passport;passport";
 
 service PassportService {
-    rpc Register(AuthInfo) returns (AuthTokens) {
+    rpc Register(RegisterRequest) returns (RegisterResponse) {
         option (google.api.http) = {
             post: "/register",
             body: "*"
         };
     };
 
-    rpc Login(AuthInfo) returns (AuthTokens) {
+    rpc Login(LoginRegister) returns (LoginResponse) {
         option (google.api.http) = {
             post: "/login",
             body: "*"
         };
     };      
 
-    rpc RefreshTokens(Token) returns (AuthTokens) {
+    rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {
         option (google.api.http) = {
             post: "/refresh",
             body: "*"
         };
     };
 
-    rpc GetUser(UserID) returns (Passport) {
+    rpc GetUser(GetUserRequest) returns (Passport) {
         option (google.api.http) = {
             get: "/users/{user_id}"
         };
@@ -44,21 +44,17 @@ service PassportService {
         };
     };
 
-    rpc DeleteUser(UserID) returns (google.protobuf.Empty) {
+    rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             delete: "/users/{user_id}"
         };
     };
 
-    rpc CheckToken(Token) returns (UserID) {
-        option (google.api.http) = {
-            post: "/check",
-            body: "*"
-        };
-    };
+    rpc CheckToken(CheckTokenRequest) returns (CheckTokenResponse);
 }
 
-message AuthInfo {
+
+message RegisterRequest {
     string name = 1 [(validate.rules).string = {
         min_len: 3,
         max_len: 30
@@ -69,11 +65,37 @@ message AuthInfo {
     }];
 }
 
-message Token {
-    string token = 1;
+message RegisterResponse {
+    string refresh_token = 1;
+    string access_token = 2;
 }
 
-message UserID {
+message LoginRegister {
+    string name = 1 [(validate.rules).string = {
+        min_len: 3,
+        max_len: 30
+    }];
+    string password = 2 [(validate.rules).string = {
+        min_len: 7,
+        max_len: 30
+    }];
+}
+
+message LoginResponse {
+    string refresh_token = 1;
+    string access_token = 2;
+}
+
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+    string refresh_token = 1;
+    string access_token = 2;
+}
+
+message GetUserRequest {
     string user_id = 1 [(validate.rules).string.uuid = true];
 }
 
@@ -89,7 +111,14 @@ message UpdateUserRequest {
     }];
 }
 
-message AuthTokens {
-    string refresh_token = 1;
-    string access_token = 2;
+message DeleteUserRequest {
+    string user_id = 1 [(validate.rules).string.uuid = true];
+}
+
+message CheckTokenRequest {
+    string token = 1;
+}
+
+message CheckTokenResponse {
+    string user_id = 1 [(validate.rules).string.uuid = true];
 }

@@ -32,7 +32,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_PassportService_Register_0(ctx context.Context, marshaler runtime.Marshaler, client PassportServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AuthInfo
+	var protoReq RegisterRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -45,7 +45,7 @@ func request_PassportService_Register_0(ctx context.Context, marshaler runtime.M
 }
 
 func local_request_PassportService_Register_0(ctx context.Context, marshaler runtime.Marshaler, server PassportServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AuthInfo
+	var protoReq RegisterRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -58,7 +58,7 @@ func local_request_PassportService_Register_0(ctx context.Context, marshaler run
 }
 
 func request_PassportService_Login_0(ctx context.Context, marshaler runtime.Marshaler, client PassportServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AuthInfo
+	var protoReq LoginRegister
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -71,7 +71,7 @@ func request_PassportService_Login_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func local_request_PassportService_Login_0(ctx context.Context, marshaler runtime.Marshaler, server PassportServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AuthInfo
+	var protoReq LoginRegister
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -83,34 +83,34 @@ func local_request_PassportService_Login_0(ctx context.Context, marshaler runtim
 
 }
 
-func request_PassportService_RefreshTokens_0(ctx context.Context, marshaler runtime.Marshaler, client PassportServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq Token
+func request_PassportService_RefreshToken_0(ctx context.Context, marshaler runtime.Marshaler, client PassportServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RefreshTokenRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.RefreshTokens(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.RefreshToken(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_PassportService_RefreshTokens_0(ctx context.Context, marshaler runtime.Marshaler, server PassportServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq Token
+func local_request_PassportService_RefreshToken_0(ctx context.Context, marshaler runtime.Marshaler, server PassportServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RefreshTokenRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.RefreshTokens(ctx, &protoReq)
+	msg, err := server.RefreshToken(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 func request_PassportService_GetUser_0(ctx context.Context, marshaler runtime.Marshaler, client PassportServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UserID
+	var protoReq GetUserRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -136,7 +136,7 @@ func request_PassportService_GetUser_0(ctx context.Context, marshaler runtime.Ma
 }
 
 func local_request_PassportService_GetUser_0(ctx context.Context, marshaler runtime.Marshaler, server PassportServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UserID
+	var protoReq GetUserRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -222,7 +222,7 @@ func local_request_PassportService_UpdateUser_0(ctx context.Context, marshaler r
 }
 
 func request_PassportService_DeleteUser_0(ctx context.Context, marshaler runtime.Marshaler, client PassportServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UserID
+	var protoReq DeleteUserRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -248,7 +248,7 @@ func request_PassportService_DeleteUser_0(ctx context.Context, marshaler runtime
 }
 
 func local_request_PassportService_DeleteUser_0(ctx context.Context, marshaler runtime.Marshaler, server PassportServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UserID
+	var protoReq DeleteUserRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -274,7 +274,7 @@ func local_request_PassportService_DeleteUser_0(ctx context.Context, marshaler r
 }
 
 func request_PassportService_CheckToken_0(ctx context.Context, marshaler runtime.Marshaler, client PassportServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq Token
+	var protoReq CheckTokenRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -287,7 +287,7 @@ func request_PassportService_CheckToken_0(ctx context.Context, marshaler runtime
 }
 
 func local_request_PassportService_CheckToken_0(ctx context.Context, marshaler runtime.Marshaler, server PassportServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq Token
+	var protoReq CheckTokenRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -356,7 +356,7 @@ func RegisterPassportServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 
 	})
 
-	mux.Handle("POST", pattern_PassportService_RefreshTokens_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PassportService_RefreshToken_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -364,12 +364,12 @@ func RegisterPassportServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/passport.PassportService/RefreshTokens", runtime.WithHTTPPathPattern("/refresh"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/passport.PassportService/RefreshToken", runtime.WithHTTPPathPattern("/refresh"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_PassportService_RefreshTokens_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PassportService_RefreshToken_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -377,7 +377,7 @@ func RegisterPassportServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 			return
 		}
 
-		forward_PassportService_RefreshTokens_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PassportService_RefreshToken_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -464,7 +464,7 @@ func RegisterPassportServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/passport.PassportService/CheckToken", runtime.WithHTTPPathPattern("/check"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/passport.PassportService/CheckToken", runtime.WithHTTPPathPattern("/passport.PassportService/CheckToken"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -566,25 +566,25 @@ func RegisterPassportServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 
 	})
 
-	mux.Handle("POST", pattern_PassportService_RefreshTokens_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PassportService_RefreshToken_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/passport.PassportService/RefreshTokens", runtime.WithHTTPPathPattern("/refresh"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/passport.PassportService/RefreshToken", runtime.WithHTTPPathPattern("/refresh"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PassportService_RefreshTokens_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PassportService_RefreshToken_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_PassportService_RefreshTokens_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PassportService_RefreshToken_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -660,7 +660,7 @@ func RegisterPassportServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/passport.PassportService/CheckToken", runtime.WithHTTPPathPattern("/check"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/passport.PassportService/CheckToken", runtime.WithHTTPPathPattern("/passport.PassportService/CheckToken"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -684,7 +684,7 @@ var (
 
 	pattern_PassportService_Login_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"login"}, ""))
 
-	pattern_PassportService_RefreshTokens_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"refresh"}, ""))
+	pattern_PassportService_RefreshToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"refresh"}, ""))
 
 	pattern_PassportService_GetUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"users", "user_id"}, ""))
 
@@ -692,7 +692,7 @@ var (
 
 	pattern_PassportService_DeleteUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"users", "user_id"}, ""))
 
-	pattern_PassportService_CheckToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"check"}, ""))
+	pattern_PassportService_CheckToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"passport.PassportService", "CheckToken"}, ""))
 )
 
 var (
@@ -700,7 +700,7 @@ var (
 
 	forward_PassportService_Login_0 = runtime.ForwardResponseMessage
 
-	forward_PassportService_RefreshTokens_0 = runtime.ForwardResponseMessage
+	forward_PassportService_RefreshToken_0 = runtime.ForwardResponseMessage
 
 	forward_PassportService_GetUser_0 = runtime.ForwardResponseMessage
 

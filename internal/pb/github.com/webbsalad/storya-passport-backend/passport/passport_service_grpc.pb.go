@@ -20,26 +20,26 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PassportService_Register_FullMethodName      = "/passport.PassportService/Register"
-	PassportService_Login_FullMethodName         = "/passport.PassportService/Login"
-	PassportService_RefreshTokens_FullMethodName = "/passport.PassportService/RefreshTokens"
-	PassportService_GetUser_FullMethodName       = "/passport.PassportService/GetUser"
-	PassportService_UpdateUser_FullMethodName    = "/passport.PassportService/UpdateUser"
-	PassportService_DeleteUser_FullMethodName    = "/passport.PassportService/DeleteUser"
-	PassportService_CheckToken_FullMethodName    = "/passport.PassportService/CheckToken"
+	PassportService_Register_FullMethodName     = "/passport.PassportService/Register"
+	PassportService_Login_FullMethodName        = "/passport.PassportService/Login"
+	PassportService_RefreshToken_FullMethodName = "/passport.PassportService/RefreshToken"
+	PassportService_GetUser_FullMethodName      = "/passport.PassportService/GetUser"
+	PassportService_UpdateUser_FullMethodName   = "/passport.PassportService/UpdateUser"
+	PassportService_DeleteUser_FullMethodName   = "/passport.PassportService/DeleteUser"
+	PassportService_CheckToken_FullMethodName   = "/passport.PassportService/CheckToken"
 )
 
 // PassportServiceClient is the client API for PassportService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PassportServiceClient interface {
-	Register(ctx context.Context, in *AuthInfo, opts ...grpc.CallOption) (*AuthTokens, error)
-	Login(ctx context.Context, in *AuthInfo, opts ...grpc.CallOption) (*AuthTokens, error)
-	RefreshTokens(ctx context.Context, in *Token, opts ...grpc.CallOption) (*AuthTokens, error)
-	GetUser(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*Passport, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	Login(ctx context.Context, in *LoginRegister, opts ...grpc.CallOption) (*LoginResponse, error)
+	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*Passport, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*Passport, error)
-	DeleteUser(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CheckToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*UserID, error)
+	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CheckToken(ctx context.Context, in *CheckTokenRequest, opts ...grpc.CallOption) (*CheckTokenResponse, error)
 }
 
 type passportServiceClient struct {
@@ -50,9 +50,9 @@ func NewPassportServiceClient(cc grpc.ClientConnInterface) PassportServiceClient
 	return &passportServiceClient{cc}
 }
 
-func (c *passportServiceClient) Register(ctx context.Context, in *AuthInfo, opts ...grpc.CallOption) (*AuthTokens, error) {
+func (c *passportServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AuthTokens)
+	out := new(RegisterResponse)
 	err := c.cc.Invoke(ctx, PassportService_Register_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -60,9 +60,9 @@ func (c *passportServiceClient) Register(ctx context.Context, in *AuthInfo, opts
 	return out, nil
 }
 
-func (c *passportServiceClient) Login(ctx context.Context, in *AuthInfo, opts ...grpc.CallOption) (*AuthTokens, error) {
+func (c *passportServiceClient) Login(ctx context.Context, in *LoginRegister, opts ...grpc.CallOption) (*LoginResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AuthTokens)
+	out := new(LoginResponse)
 	err := c.cc.Invoke(ctx, PassportService_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -70,17 +70,17 @@ func (c *passportServiceClient) Login(ctx context.Context, in *AuthInfo, opts ..
 	return out, nil
 }
 
-func (c *passportServiceClient) RefreshTokens(ctx context.Context, in *Token, opts ...grpc.CallOption) (*AuthTokens, error) {
+func (c *passportServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AuthTokens)
-	err := c.cc.Invoke(ctx, PassportService_RefreshTokens_FullMethodName, in, out, cOpts...)
+	out := new(RefreshTokenResponse)
+	err := c.cc.Invoke(ctx, PassportService_RefreshToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *passportServiceClient) GetUser(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*Passport, error) {
+func (c *passportServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*Passport, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Passport)
 	err := c.cc.Invoke(ctx, PassportService_GetUser_FullMethodName, in, out, cOpts...)
@@ -100,7 +100,7 @@ func (c *passportServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRe
 	return out, nil
 }
 
-func (c *passportServiceClient) DeleteUser(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *passportServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, PassportService_DeleteUser_FullMethodName, in, out, cOpts...)
@@ -110,9 +110,9 @@ func (c *passportServiceClient) DeleteUser(ctx context.Context, in *UserID, opts
 	return out, nil
 }
 
-func (c *passportServiceClient) CheckToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*UserID, error) {
+func (c *passportServiceClient) CheckToken(ctx context.Context, in *CheckTokenRequest, opts ...grpc.CallOption) (*CheckTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserID)
+	out := new(CheckTokenResponse)
 	err := c.cc.Invoke(ctx, PassportService_CheckToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -124,13 +124,13 @@ func (c *passportServiceClient) CheckToken(ctx context.Context, in *Token, opts 
 // All implementations must embed UnimplementedPassportServiceServer
 // for forward compatibility.
 type PassportServiceServer interface {
-	Register(context.Context, *AuthInfo) (*AuthTokens, error)
-	Login(context.Context, *AuthInfo) (*AuthTokens, error)
-	RefreshTokens(context.Context, *Token) (*AuthTokens, error)
-	GetUser(context.Context, *UserID) (*Passport, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	Login(context.Context, *LoginRegister) (*LoginResponse, error)
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*Passport, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*Passport, error)
-	DeleteUser(context.Context, *UserID) (*emptypb.Empty, error)
-	CheckToken(context.Context, *Token) (*UserID, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
+	CheckToken(context.Context, *CheckTokenRequest) (*CheckTokenResponse, error)
 	mustEmbedUnimplementedPassportServiceServer()
 }
 
@@ -141,25 +141,25 @@ type PassportServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPassportServiceServer struct{}
 
-func (UnimplementedPassportServiceServer) Register(context.Context, *AuthInfo) (*AuthTokens, error) {
+func (UnimplementedPassportServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedPassportServiceServer) Login(context.Context, *AuthInfo) (*AuthTokens, error) {
+func (UnimplementedPassportServiceServer) Login(context.Context, *LoginRegister) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedPassportServiceServer) RefreshTokens(context.Context, *Token) (*AuthTokens, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshTokens not implemented")
+func (UnimplementedPassportServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
-func (UnimplementedPassportServiceServer) GetUser(context.Context, *UserID) (*Passport, error) {
+func (UnimplementedPassportServiceServer) GetUser(context.Context, *GetUserRequest) (*Passport, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedPassportServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*Passport, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedPassportServiceServer) DeleteUser(context.Context, *UserID) (*emptypb.Empty, error) {
+func (UnimplementedPassportServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedPassportServiceServer) CheckToken(context.Context, *Token) (*UserID, error) {
+func (UnimplementedPassportServiceServer) CheckToken(context.Context, *CheckTokenRequest) (*CheckTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckToken not implemented")
 }
 func (UnimplementedPassportServiceServer) mustEmbedUnimplementedPassportServiceServer() {}
@@ -184,7 +184,7 @@ func RegisterPassportServiceServer(s grpc.ServiceRegistrar, srv PassportServiceS
 }
 
 func _PassportService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthInfo)
+	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -196,13 +196,13 @@ func _PassportService_Register_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: PassportService_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PassportServiceServer).Register(ctx, req.(*AuthInfo))
+		return srv.(PassportServiceServer).Register(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _PassportService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthInfo)
+	in := new(LoginRegister)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -214,31 +214,31 @@ func _PassportService_Login_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: PassportService_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PassportServiceServer).Login(ctx, req.(*AuthInfo))
+		return srv.(PassportServiceServer).Login(ctx, req.(*LoginRegister))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PassportService_RefreshTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Token)
+func _PassportService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PassportServiceServer).RefreshTokens(ctx, in)
+		return srv.(PassportServiceServer).RefreshToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PassportService_RefreshTokens_FullMethodName,
+		FullMethod: PassportService_RefreshToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PassportServiceServer).RefreshTokens(ctx, req.(*Token))
+		return srv.(PassportServiceServer).RefreshToken(ctx, req.(*RefreshTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _PassportService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserID)
+	in := new(GetUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -250,7 +250,7 @@ func _PassportService_GetUser_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: PassportService_GetUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PassportServiceServer).GetUser(ctx, req.(*UserID))
+		return srv.(PassportServiceServer).GetUser(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -274,7 +274,7 @@ func _PassportService_UpdateUser_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _PassportService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserID)
+	in := new(DeleteUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -286,13 +286,13 @@ func _PassportService_DeleteUser_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: PassportService_DeleteUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PassportServiceServer).DeleteUser(ctx, req.(*UserID))
+		return srv.(PassportServiceServer).DeleteUser(ctx, req.(*DeleteUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _PassportService_CheckToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Token)
+	in := new(CheckTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -304,7 +304,7 @@ func _PassportService_CheckToken_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: PassportService_CheckToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PassportServiceServer).CheckToken(ctx, req.(*Token))
+		return srv.(PassportServiceServer).CheckToken(ctx, req.(*CheckTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -325,8 +325,8 @@ var PassportService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PassportService_Login_Handler,
 		},
 		{
-			MethodName: "RefreshTokens",
-			Handler:    _PassportService_RefreshTokens_Handler,
+			MethodName: "RefreshToken",
+			Handler:    _PassportService_RefreshToken_Handler,
 		},
 		{
 			MethodName: "GetUser",

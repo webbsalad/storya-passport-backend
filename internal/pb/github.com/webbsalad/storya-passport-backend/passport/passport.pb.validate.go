@@ -83,8 +83,6 @@ func (m *Passport) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for PasswordHash
-
 	if all {
 		switch v := interface{}(m.GetCreatedAt()).(type) {
 		case interface{ ValidateAll() error }:
