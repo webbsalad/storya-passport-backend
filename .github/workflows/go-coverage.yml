@@ -1,0 +1,53 @@
+name: go-coverage-check
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: stable
+
+
+      - name: Run tests with coverage
+        run: go test -cover -coverprofile=coverage.out ./...
+
+
+      - name: Calculate coverage percentage
+        id: calculate-coverage
+        run: |
+          go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//' > coverage.txt
+          COVERAGE=$(cat coverage.txt)
+          echo "COVERAGE_PERCENT=$COVERAGE" >> $GITHUB_ENV
+        shell: bash
+
+
+      - name: Enforce coverage threshold
+        run: |
+          MINIMUM_COVERAGE=0
+          echo "Checking if coverage ($COVERAGE_PERCENT%) meets the minimum threshold ($MINIMUM_COVERAGE%)."
+          if (( $(echo "$COVERAGE_PERCENT < $MINIMUM_COVERAGE" | bc -l) )); then
+            echo "Code coverage ($COVERAGE_PERCENT%) is below the acceptable threshold ($MINIMUM_COVERAGE%)."
+            exit 1
+          fi
+        shell: bash
+
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.out

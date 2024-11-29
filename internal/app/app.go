@@ -4,7 +4,7 @@ import (
 	"github.com/webbsalad/storya-passport-backend/internal/api/passport"
 	"github.com/webbsalad/storya-passport-backend/internal/config"
 	pb "github.com/webbsalad/storya-passport-backend/internal/pb/github.com/webbsalad/storya-passport-backend/passport"
-	"github.com/webbsalad/storya-passport-backend/repository/passport/pg"
+	"github.com/webbsalad/storya-passport-backend/internal/repository/passport/pg"
 
 	v1 "github.com/webbsalad/storya-passport-backend/internal/service/passport/v1"
 	"go.uber.org/fx"

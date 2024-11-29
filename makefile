@@ -16,7 +16,6 @@ GRPC_GATEWAY_FLAGS := \
 
 .PHONY: all proto proto-deps clean clean-vendor
 
-all: proto
 
 proto: proto-deps
 	protoc $(PROTOC_FLAGS) $(PROTO_SRC_DIR)/*.proto
@@ -33,3 +32,7 @@ proto-deps:
 	git clone --depth=1 https://github.com/bufbuild/protoc-gen-validate.git $(VENDOR_DIR)/protoc-gen-validate
 	mv $(VENDOR_DIR)/protoc-gen-validate/validate/ $(VENDOR_DIR)
 	rm -rf $(VENDOR_DIR)/protoc-gen-validate
+
+quality:
+	go test -cover -coverprofile=coverage.out ./... 
+	golangci-lint run 

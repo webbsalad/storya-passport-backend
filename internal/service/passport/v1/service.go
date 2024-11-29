@@ -2,8 +2,8 @@ package v1
 
 import (
 	"github.com/webbsalad/storya-passport-backend/internal/config"
+	"github.com/webbsalad/storya-passport-backend/internal/repository/passport"
 	passport_service "github.com/webbsalad/storya-passport-backend/internal/service/passport"
-	"github.com/webbsalad/storya-passport-backend/repository/passport"
 )
 
 type Service struct {
