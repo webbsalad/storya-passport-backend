@@ -6,7 +6,9 @@ CREATE TABLE users
     name TEXT NOT NULL,
     password_hash TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
+    updated_at TIMESTAMPTZ DEFAULT now() NOT NULL,
+
+    CONSTRAINT unique_name UNIQUE (name)
 );
 -- +goose StatementEnd
 

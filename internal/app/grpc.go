@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var port = flag.Int("port", 50056, "The gRPC server port")
+var port = flag.Int("port", 50051, "The gRPC server port")
 
 func NewServer(s *grpc.Server) grpc.ServiceRegistrar {
 	return grpc.ServiceRegistrar(s)
