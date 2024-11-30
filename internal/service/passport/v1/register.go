@@ -8,11 +8,21 @@ import (
 )
 
 func (s *Service) Register(ctx context.Context, name, passord string) (model.AuthTokens, error) {
-	// TODO хеширование пароля, создание токенов
-	userID, err := s.passportRepository.Register(ctx, name, passord)
+	hashedPassword, err := hashPassword(passord)
+	if err != nil {
+		return model.AuthTokens{}, fmt.Errorf("hashing: %w", err)
+	}
+
+	session, err := s.passportRepository.Register(ctx, name, hashedPassword)
 	if err != nil {
 		return model.AuthTokens{}, fmt.Errorf("register user: %w", err)
 	}
 
-	return model.NewAuthTokensFromStrings(userID.String(), userID.String()), err
+	tokens, err := generateTokens(session, s.config.JWTSecret)
+	if err != nil {
+		return model.AuthTokens{}, fmt.Errorf("get tokens: %w", err)
+	}
+
+	return tokens, nil
+
 }

@@ -21,7 +21,7 @@ func NewRepository(db *sqlx.DB) (passport.Repository, error) {
 	return &Repository{db: db}, nil
 }
 
-func (r *Repository) Register(ctx context.Context, name, passwordHash string) (model.UserID, error) {
+func (r *Repository) Register(ctx context.Context, name, passwordHash string) (model.Session, error) {
 	var strUserID string
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	query := psql.
@@ -32,23 +32,57 @@ func (r *Repository) Register(ctx context.Context, name, passwordHash string) (m
 
 	q, args, err := query.ToSql()
 	if err != nil {
-		return model.UserID{}, fmt.Errorf("building query: %w", err)
+		return model.Session{}, fmt.Errorf("building query: %w", err)
 	}
 
-	err = r.db.QueryRowContext(ctx, q, args...).Scan(&strUserID)
-	if err != nil {
+	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&strUserID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.UserID{}, model.ErrUserAlreadyExist
+			return model.Session{}, model.ErrUserAlreadyExist
 		}
 
-		return model.UserID{}, fmt.Errorf("execute query: %w", err)
+		return model.Session{}, fmt.Errorf("execute query: %w", err)
 	}
 
 	userID, err := model.UserIDFromString(strUserID)
 	if err != nil {
-		return model.UserID{}, fmt.Errorf("convert str to user id: %w", err)
+		return model.Session{}, fmt.Errorf("convert str to user id: %w", err)
 	}
 
-	return userID, err
+	deviceID, err := r.createSession(userID)
+	if err != nil {
+		return model.Session{}, fmt.Errorf("get device id: %w", err)
+	}
 
+	return model.Session{
+		UserID:   userID,
+		DeviceID: deviceID,
+		Version:  1,
+	}, nil
+
+}
+
+func (r *Repository) createSession(userID model.UserID) (model.DeviceID, error) {
+	var strDeviceID string
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	query := psql.
+		Insert("user_tokens").
+		Columns("user_id", "version").
+		Values(userID.String(), 1).
+		Suffix("RETURNING device_id")
+
+	q, args, err := query.ToSql()
+	if err != nil {
+		return model.DeviceID{}, fmt.Errorf("build query: %w", err)
+	}
+
+	if err = r.db.QueryRow(q, args...).Scan(&strDeviceID); err != nil {
+		return model.DeviceID{}, fmt.Errorf("execute query: %w", err)
+	}
+
+	deviceID, err := model.DeviceIDFromString(strDeviceID)
+	if err != nil {
+		return model.DeviceID{}, fmt.Errorf("convert str to id: %w", err)
+	}
+
+	return deviceID, nil
 }
