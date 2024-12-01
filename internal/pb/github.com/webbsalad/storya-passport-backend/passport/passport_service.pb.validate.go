@@ -264,22 +264,22 @@ var _ interface {
 	ErrorName() string
 } = RegisterResponseValidationError{}
 
-// Validate checks the field values on LoginRegister with the rules defined in
+// Validate checks the field values on LoginRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *LoginRegister) Validate() error {
+func (m *LoginRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on LoginRegister with the rules defined
+// ValidateAll checks the field values on LoginRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in LoginRegisterMultiError, or
+// result is a list of violation errors wrapped in LoginRequestMultiError, or
 // nil if none found.
-func (m *LoginRegister) ValidateAll() error {
+func (m *LoginRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *LoginRegister) validate(all bool) error {
+func (m *LoginRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -287,7 +287,7 @@ func (m *LoginRegister) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetName()); l < 3 || l > 30 {
-		err := LoginRegisterValidationError{
+		err := LoginRequestValidationError{
 			field:  "Name",
 			reason: "value length must be between 3 and 30 runes, inclusive",
 		}
@@ -298,7 +298,7 @@ func (m *LoginRegister) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetPassword()); l < 7 || l > 30 {
-		err := LoginRegisterValidationError{
+		err := LoginRequestValidationError{
 			field:  "Password",
 			reason: "value length must be between 7 and 30 runes, inclusive",
 		}
@@ -309,19 +309,18 @@ func (m *LoginRegister) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return LoginRegisterMultiError(errors)
+		return LoginRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// LoginRegisterMultiError is an error wrapping multiple validation errors
-// returned by LoginRegister.ValidateAll() if the designated constraints
-// aren't met.
-type LoginRegisterMultiError []error
+// LoginRequestMultiError is an error wrapping multiple validation errors
+// returned by LoginRequest.ValidateAll() if the designated constraints aren't met.
+type LoginRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m LoginRegisterMultiError) Error() string {
+func (m LoginRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -330,11 +329,11 @@ func (m LoginRegisterMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m LoginRegisterMultiError) AllErrors() []error { return m }
+func (m LoginRequestMultiError) AllErrors() []error { return m }
 
-// LoginRegisterValidationError is the validation error returned by
-// LoginRegister.Validate if the designated constraints aren't met.
-type LoginRegisterValidationError struct {
+// LoginRequestValidationError is the validation error returned by
+// LoginRequest.Validate if the designated constraints aren't met.
+type LoginRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -342,22 +341,22 @@ type LoginRegisterValidationError struct {
 }
 
 // Field function returns field value.
-func (e LoginRegisterValidationError) Field() string { return e.field }
+func (e LoginRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e LoginRegisterValidationError) Reason() string { return e.reason }
+func (e LoginRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e LoginRegisterValidationError) Cause() error { return e.cause }
+func (e LoginRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e LoginRegisterValidationError) Key() bool { return e.key }
+func (e LoginRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e LoginRegisterValidationError) ErrorName() string { return "LoginRegisterValidationError" }
+func (e LoginRequestValidationError) ErrorName() string { return "LoginRequestValidationError" }
 
 // Error satisfies the builtin error interface
-func (e LoginRegisterValidationError) Error() string {
+func (e LoginRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -369,14 +368,14 @@ func (e LoginRegisterValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sLoginRegister.%s: %s%s",
+		"invalid %sLoginRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = LoginRegisterValidationError{}
+var _ error = LoginRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -384,7 +383,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = LoginRegisterValidationError{}
+} = LoginRequestValidationError{}
 
 // Validate checks the field values on LoginResponse with the rules defined in
 // the proto definition for this message. If any rules are violated, the first

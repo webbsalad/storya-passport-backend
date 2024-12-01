@@ -3,6 +3,7 @@ package v1
 import (
 	"fmt"
 
+	"github.com/webbsalad/storya-passport-backend/internal/model"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,7 +18,7 @@ func hashPassword(password string) (string, error) {
 func comparePassword(hashedPassword, password string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	if err != nil {
-		return fmt.Errorf("invalid password: %w", err)
+		return model.ErrWrongPassword
 	}
 	return nil
 }
