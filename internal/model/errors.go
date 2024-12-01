@@ -13,5 +13,9 @@ var (
 
 var (
 	ErrUserAlreadyExist = fmt.Errorf("user already exist: %w", ErrAlreadyExist)
-	ErrWrongPassword    = fmt.Errorf("wrong password: %w", ErrPermissionDenied)
+
+	ErrWrongPassword = fmt.Errorf("wrong password: %w", ErrPermissionDenied)
+
+	ErrDeviceNotFound  = fmt.Errorf("device not found: %w", ErrNotFound)
+	ErrMissingMetaData = fmt.Errorf("missing context metadata: %w", ErrNotFound)
 )

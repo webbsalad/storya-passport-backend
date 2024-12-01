@@ -50,6 +50,12 @@ service PassportService {
         };
     };
 
+    rpc LogOut(google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/log-out"
+        };
+    };
+
     rpc CheckToken(CheckTokenRequest) returns (CheckTokenResponse);
 }
 
