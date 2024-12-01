@@ -58,7 +58,7 @@ func local_request_PassportService_Register_0(ctx context.Context, marshaler run
 }
 
 func request_PassportService_Login_0(ctx context.Context, marshaler runtime.Marshaler, client PassportServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq LoginRegister
+	var protoReq LoginRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
@@ -71,7 +71,7 @@ func request_PassportService_Login_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func local_request_PassportService_Login_0(ctx context.Context, marshaler runtime.Marshaler, server PassportServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq LoginRegister
+	var protoReq LoginRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {

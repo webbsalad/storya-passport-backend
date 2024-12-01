@@ -23,6 +23,7 @@ func NewRepository(db *sqlx.DB) (passport.Repository, error) {
 
 func (r *Repository) Register(ctx context.Context, name, passwordHash string) (model.Session, error) {
 	var strUserID string
+
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	query := psql.
 		Insert("users").
@@ -61,8 +62,67 @@ func (r *Repository) Register(ctx context.Context, name, passwordHash string) (m
 
 }
 
+func (r *Repository) GetPasshash(ctx context.Context, name string) (string, error) {
+	var passwordHash string
+
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	query := psql.
+		Select("password_hash").
+		From("users").
+		Where(sq.Eq{"name": name})
+
+	q, args, err := query.ToSql()
+	if err != nil {
+		return "", fmt.Errorf("build query: %w", err)
+	}
+
+	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&passwordHash); err != nil {
+		return "", fmt.Errorf("execute query: %w", err)
+	}
+
+	return passwordHash, nil
+
+}
+
+func (r *Repository) GetSessionInfo(ctx context.Context, name string) (model.Session, error) {
+	var strUserID string
+
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	query := psql.
+		Select("id").
+		From("users").
+		Where(sq.Eq{"name": name})
+
+	q, args, err := query.ToSql()
+	if err != nil {
+		return model.Session{}, fmt.Errorf("build query: %w", err)
+	}
+
+	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&strUserID); err != nil {
+		return model.Session{}, fmt.Errorf("execute query: %w", err)
+	}
+
+	userID, err := model.UserIDFromString(strUserID)
+	if err != nil {
+		return model.Session{}, fmt.Errorf("convert string to user id: %w", err)
+	}
+
+	deviceID, err := r.createSession(userID)
+	if err != nil {
+		return model.Session{}, fmt.Errorf("get device id: %w", err)
+	}
+
+	return model.Session{
+		UserID:   userID,
+		DeviceID: deviceID,
+		Version:  1,
+	}, nil
+
+}
+
 func (r *Repository) createSession(userID model.UserID) (model.DeviceID, error) {
 	var strDeviceID string
+
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	query := psql.
 		Insert("user_tokens").

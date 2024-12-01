@@ -13,4 +13,5 @@ var (
 
 var (
 	ErrUserAlreadyExist = fmt.Errorf("user already exist: %w", ErrAlreadyExist)
+	ErrWrongPassword    = fmt.Errorf("wrong password: %w", ErrPermissionDenied)
 )

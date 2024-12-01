@@ -8,4 +8,5 @@ import (
 
 type Service interface {
 	Register(ctx context.Context, name, passord string) (model.AuthTokens, error)
+	Login(ctx context.Context, name, password string) (model.AuthTokens, error)
 }
