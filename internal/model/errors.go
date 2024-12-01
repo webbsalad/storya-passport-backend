@@ -14,8 +14,11 @@ var (
 var (
 	ErrUserAlreadyExist = fmt.Errorf("user already exist: %w", ErrAlreadyExist)
 
-	ErrWrongPassword = fmt.Errorf("wrong password: %w", ErrPermissionDenied)
+	ErrWrongPassword  = fmt.Errorf("wrong password: %w", ErrPermissionDenied)
+	ErrExpiredToken   = fmt.Errorf("expired token: %w", ErrPermissionDenied)
+	ErrExpiredSession = fmt.Errorf("wrong token version: %w", ErrPermissionDenied)
 
+	ErrUserNotFound    = fmt.Errorf("user not found: %w", ErrNotFound)
 	ErrDeviceNotFound  = fmt.Errorf("device not found: %w", ErrNotFound)
 	ErrMissingMetaData = fmt.Errorf("missing context metadata: %w", ErrNotFound)
 )

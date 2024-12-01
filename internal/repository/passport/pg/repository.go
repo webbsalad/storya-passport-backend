@@ -120,6 +120,67 @@ func (r *Repository) GetSessionInfo(ctx context.Context, name string) (model.Ses
 
 }
 
+func (r *Repository) GetTokenVersion(ctx context.Context, userID model.UserID, deviceID model.DeviceID) (int, error) {
+	var version int
+
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	query := psql.
+		Select("version").
+		From("user_tokens").
+		Where(sq.And{
+			sq.Eq{"user_id": userID.String()},
+			sq.Eq{"device_id": deviceID.String()},
+		})
+
+	q, args, err := query.ToSql()
+	if err != nil {
+		return 0, fmt.Errorf("build query: %w", err)
+	}
+
+	if err = r.db.GetContext(ctx, &version, q, args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, model.ErrUserNotFound
+		}
+		return 0, fmt.Errorf("get user: %w", err)
+	}
+
+	return version, nil
+
+}
+
+func (r *Repository) UpdateTokenVersion(ctx context.Context, session model.Session) error {
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	query := psql.
+		Update("user_tokens").
+		Set("version", session.Version+1).
+		Where(sq.And{
+			sq.Eq{"user_id": session.UserID.String()},
+			sq.Eq{"device_id": session.DeviceID.String()},
+		})
+
+	q, args, err := query.ToSql()
+	if err != nil {
+		return fmt.Errorf("build query: %w", err)
+	}
+
+	res, err := r.db.ExecContext(ctx, q, args...)
+	if err != nil {
+		return fmt.Errorf("update session")
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("get affect: %w", err)
+	}
+
+	if rowAffected == 0 {
+		return model.ErrDeviceNotFound
+	}
+
+	return nil
+
+}
+
 func (r *Repository) LogOut(ctx context.Context, userID model.UserID, deviceID model.DeviceID) error {
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	query := psql.
@@ -134,12 +195,12 @@ func (r *Repository) LogOut(ctx context.Context, userID model.UserID, deviceID m
 		return fmt.Errorf("build query: %w", err)
 	}
 
-	result, err := r.db.ExecContext(ctx, q, args...)
+	res, err := r.db.ExecContext(ctx, q, args...)
 	if err != nil {
 		return fmt.Errorf("delete session: %w", err)
 	}
 
-	rowAffected, err := result.RowsAffected()
+	rowAffected, err := res.RowsAffected()
 	if err != nil {
 		return fmt.Errorf("get affect: %w", err)
 	}
