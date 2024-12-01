@@ -26,6 +26,7 @@ const (
 	PassportService_GetUser_FullMethodName      = "/passport.PassportService/GetUser"
 	PassportService_UpdateUser_FullMethodName   = "/passport.PassportService/UpdateUser"
 	PassportService_DeleteUser_FullMethodName   = "/passport.PassportService/DeleteUser"
+	PassportService_LogOut_FullMethodName       = "/passport.PassportService/LogOut"
 	PassportService_CheckToken_FullMethodName   = "/passport.PassportService/CheckToken"
 )
 
@@ -39,6 +40,7 @@ type PassportServiceClient interface {
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*Passport, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*Passport, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	LogOut(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CheckToken(ctx context.Context, in *CheckTokenRequest, opts ...grpc.CallOption) (*CheckTokenResponse, error)
 }
 
@@ -110,6 +112,16 @@ func (c *passportServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRe
 	return out, nil
 }
 
+func (c *passportServiceClient) LogOut(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, PassportService_LogOut_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *passportServiceClient) CheckToken(ctx context.Context, in *CheckTokenRequest, opts ...grpc.CallOption) (*CheckTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CheckTokenResponse)
@@ -130,6 +142,7 @@ type PassportServiceServer interface {
 	GetUser(context.Context, *GetUserRequest) (*Passport, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*Passport, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
+	LogOut(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	CheckToken(context.Context, *CheckTokenRequest) (*CheckTokenResponse, error)
 	mustEmbedUnimplementedPassportServiceServer()
 }
@@ -158,6 +171,9 @@ func (UnimplementedPassportServiceServer) UpdateUser(context.Context, *UpdateUse
 }
 func (UnimplementedPassportServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (UnimplementedPassportServiceServer) LogOut(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
 }
 func (UnimplementedPassportServiceServer) CheckToken(context.Context, *CheckTokenRequest) (*CheckTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckToken not implemented")
@@ -291,6 +307,24 @@ func _PassportService_DeleteUser_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PassportService_LogOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PassportServiceServer).LogOut(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PassportService_LogOut_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PassportServiceServer).LogOut(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PassportService_CheckToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CheckTokenRequest)
 	if err := dec(in); err != nil {
@@ -339,6 +373,10 @@ var PassportService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _PassportService_DeleteUser_Handler,
+		},
+		{
+			MethodName: "LogOut",
+			Handler:    _PassportService_LogOut_Handler,
 		},
 		{
 			MethodName: "CheckToken",

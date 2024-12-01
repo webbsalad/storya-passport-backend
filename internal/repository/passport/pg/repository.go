@@ -120,6 +120,37 @@ func (r *Repository) GetSessionInfo(ctx context.Context, name string) (model.Ses
 
 }
 
+func (r *Repository) LogOut(ctx context.Context, userID model.UserID, deviceID model.DeviceID) error {
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	query := psql.
+		Delete("user_tokens").
+		Where(sq.And{
+			sq.Eq{"user_id": userID.String()},
+			sq.Eq{"device_id": deviceID.String()},
+		})
+
+	q, args, err := query.ToSql()
+	if err != nil {
+		return fmt.Errorf("build query: %w", err)
+	}
+
+	result, err := r.db.ExecContext(ctx, q, args...)
+	if err != nil {
+		return fmt.Errorf("delete session: %w", err)
+	}
+
+	rowAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("get affect: %w", err)
+	}
+
+	if rowAffected == 0 {
+		return model.ErrDeviceNotFound
+	}
+
+	return nil
+}
+
 func (r *Repository) createSession(userID model.UserID) (model.DeviceID, error) {
 	var strDeviceID string
 
