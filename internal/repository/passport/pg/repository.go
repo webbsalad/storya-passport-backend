@@ -62,7 +62,7 @@ func (r *Repository) Register(ctx context.Context, name, passwordHash string) (m
 
 }
 
-func (r *Repository) GetPasshash(ctx context.Context, name string) (string, error) {
+func (r *Repository) GetPasswordHash(ctx context.Context, name string) (string, error) {
 	var passwordHash string
 
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)

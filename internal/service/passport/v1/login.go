@@ -8,13 +8,13 @@ import (
 )
 
 func (s *Service) Login(ctx context.Context, name, password string) (model.AuthTokens, error) {
-	storedHash, err := s.passportRepository.GetPasshash(ctx, name)
+	storedHash, err := s.passportRepository.GetPasswordHash(ctx, name)
 	if err != nil {
 		return model.AuthTokens{}, fmt.Errorf("get password hash: %w", err)
 	}
 
 	if err = comparePassword(storedHash, password); err != nil {
-		return model.AuthTokens{}, model.ErrWrongPassword
+		return model.AuthTokens{}, fmt.Errorf("incorrect password: %w", err)
 	}
 
 	session, err := s.passportRepository.GetSessionInfo(ctx, name)
