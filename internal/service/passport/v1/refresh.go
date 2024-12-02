@@ -8,9 +8,13 @@ import (
 )
 
 func (s *Service) RefreshToken(ctx context.Context, refreshToken string) (model.AuthTokens, error) {
-	session, err := extractTokenClaims(refreshToken, s.config.JWTSecret, "refresh")
+	session, tokenType, err := extractTokenClaims(refreshToken, s.config.JWTSecret)
 	if err != nil {
 		return model.AuthTokens{}, fmt.Errorf("extract session info: %w", err)
+	}
+
+	if tokenType != "refresh" {
+		return model.AuthTokens{}, model.ErrWrongTokenType
 	}
 
 	storedVersion, err := s.passportRepository.GetTokenVersion(ctx, session.UserID, session.DeviceID)
