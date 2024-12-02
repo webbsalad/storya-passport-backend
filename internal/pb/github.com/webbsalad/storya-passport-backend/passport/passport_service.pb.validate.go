@@ -1223,6 +1223,20 @@ func (m *CheckTokenResponse) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if err := m._validateUuid(m.GetDeviceId()); err != nil {
+		err = CheckTokenResponseValidationError{
+			field:  "DeviceId",
+			reason: "value must be a valid UUID",
+			cause:  err,
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for TokenType
+
 	if len(errors) > 0 {
 		return CheckTokenResponseMultiError(errors)
 	}

@@ -9,9 +9,9 @@ import (
 	"github.com/webbsalad/storya-passport-backend/internal/model"
 )
 
-func extractTokenClaims(token, secret, expectedType string) (model.Session, error) {
+func extractTokenClaims(token, secret string) (model.Session, string, error) {
 	if secret == "" {
-		return model.Session{}, fmt.Errorf("missing jwt secret")
+		return model.Session{}, "", fmt.Errorf("missing jwt secret")
 	}
 
 	parsedToken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
@@ -23,61 +23,52 @@ func extractTokenClaims(token, secret, expectedType string) (model.Session, erro
 
 	if err != nil {
 		if errors.Is(err, jwt.ErrTokenExpired) {
-			return model.Session{}, model.ErrExpiredToken
+			return model.Session{}, "", model.ErrExpiredToken
 		}
-		return model.Session{}, fmt.Errorf("invalid token: %w", err)
+		return model.Session{}, "", fmt.Errorf("invalid token: %w", err)
 	}
 
 	if !parsedToken.Valid {
-		return model.Session{}, fmt.Errorf("invalid token")
+		return model.Session{}, "", fmt.Errorf("invalid token")
 	}
 
 	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 	if !ok {
-		return model.Session{}, fmt.Errorf("extract token claims")
+		return model.Session{}, "", fmt.Errorf("extract token claims")
 	}
 
-	if expectedType != "" {
-		tokenType, ok := claims["type"].(string)
-		if !ok {
-			return model.Session{}, fmt.Errorf("type not found: %w", err)
-		}
-
-		if tokenType != expectedType {
-			return model.Session{}, fmt.Errorf("invalid token type '%s'", expectedType)
-		}
-	}
+	tokenType, _ := claims["type"].(string)
 
 	jwtUserID, ok := claims["user_id"].(string)
 	if !ok {
-		return model.Session{}, fmt.Errorf("user id not found")
+		return model.Session{}, "", fmt.Errorf("user id not found")
 	}
 
 	userID, err := model.UserIDFromString(jwtUserID)
 	if err != nil {
-		return model.Session{}, fmt.Errorf("convert str to user id: %w", err)
+		return model.Session{}, "", fmt.Errorf("convert str to user id: %w", err)
 	}
 
 	jwtDeviceID, ok := claims["device_id"].(string)
 	if !ok {
-		return model.Session{}, fmt.Errorf("device id not found")
+		return model.Session{}, "", fmt.Errorf("device id not found")
 	}
 
 	deviceID, err := model.DeviceIDFromString(jwtDeviceID)
 	if err != nil {
-		return model.Session{}, fmt.Errorf("convert str to device id: %w", err)
+		return model.Session{}, "", fmt.Errorf("convert str to device id: %w", err)
 	}
 
 	jwtVersion, ok := claims["version"].(float64)
 	if !ok {
-		return model.Session{}, fmt.Errorf("version not found")
+		return model.Session{}, "", fmt.Errorf("version not found")
 	}
 
 	return model.Session{
 		UserID:   userID,
 		DeviceID: deviceID,
 		Version:  int(jwtVersion),
-	}, nil
+	}, tokenType, nil
 
 }
 

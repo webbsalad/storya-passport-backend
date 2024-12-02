@@ -127,4 +127,6 @@ message CheckTokenRequest {
 
 message CheckTokenResponse {
     string user_id = 1 [(validate.rules).string.uuid = true];
+    string device_id = 2 [(validate.rules).string.uuid = true];
+    string token_type = 3;
 }

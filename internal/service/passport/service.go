@@ -11,4 +11,6 @@ type Service interface {
 	Login(ctx context.Context, name, password string) (model.AuthTokens, error)
 	RefreshToken(ctx context.Context, refreshToken string) (model.AuthTokens, error)
 	LogOut(ctx context.Context, userID model.UserID, deviceID model.DeviceID) error
+
+	CheckToken(ctx context.Context, token string) (model.UserID, model.DeviceID, string, error)
 }
