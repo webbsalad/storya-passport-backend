@@ -152,7 +152,7 @@ func (r *Repository) UpdateTokenVersion(ctx context.Context, session model.Sessi
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	query := psql.
 		Update("user_tokens").
-		Set("version", session.Version+1).
+		Set("version", session.Version).
 		Where(sq.And{
 			sq.Eq{"user_id": session.UserID.String()},
 			sq.Eq{"device_id": session.DeviceID.String()},
