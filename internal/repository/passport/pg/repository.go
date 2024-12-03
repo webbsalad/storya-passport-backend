@@ -62,6 +62,32 @@ func (r *Repository) Register(ctx context.Context, name, passwordHash string) (m
 
 }
 
+func (r *Repository) GetUser(ctx context.Context, userID model.UserID) (model.User, error) {
+	var user User
+
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	query := psql.
+		Select("*").
+		From("users").
+		Where(sq.Eq{"id": userID.String()})
+
+	q, args, err := query.ToSql()
+	if err != nil {
+		return model.User{}, fmt.Errorf("build query: %w", err)
+	}
+
+	if err = r.db.GetContext(ctx, &user, q, args...); err != nil {
+		return model.User{}, fmt.Errorf("execute query: %w", err)
+	}
+
+	return model.User{
+		Name: user.Name,
+
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}, nil
+}
+
 func (r *Repository) GetPasswordHash(ctx context.Context, name string) (string, error) {
 	var passwordHash string
 
