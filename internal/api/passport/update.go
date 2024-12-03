@@ -11,7 +11,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (i *Implementation) GetUser(ctx context.Context, req *passport.GetUserRequest) (*passport.User, error) {
+func (i *Implementation) UpdateUser(ctx context.Context, req *passport.UpdateUserRequest) (*passport.User, error) {
 	if err := req.Validate(); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid request: %v", err)
 	}
@@ -21,7 +21,7 @@ func (i *Implementation) GetUser(ctx context.Context, req *passport.GetUserReque
 		return nil, status.Errorf(codes.InvalidArgument, "invalid user id: %v", err)
 	}
 
-	user, err := i.PassportService.GetUser(ctx, userID)
+	user, err := i.PassportService.UpdateUser(ctx, userID, req.GetName(), req.GetPassword())
 	if err != nil {
 		return nil, convertor.ConvertError(err)
 	}
