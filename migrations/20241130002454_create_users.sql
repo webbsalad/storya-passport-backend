@@ -7,8 +7,9 @@ CREATE TABLE users
     password_hash TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL,
-
-    CONSTRAINT unique_name UNIQUE (name)
+    email_id UUID UNIQUE,
+    
+    CONSTRAINT fk_email FOREIGN KEY (email_id) REFERENCES confirmed_emails(id) ON DELETE CASCADE
 );
 -- +goose StatementEnd
 

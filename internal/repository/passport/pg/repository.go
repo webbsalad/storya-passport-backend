@@ -9,6 +9,7 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"github.com/webbsalad/storya-passport-backend/internal/model"
 	"github.com/webbsalad/storya-passport-backend/internal/repository/passport"
 )
@@ -21,15 +22,15 @@ func NewRepository(db *sqlx.DB) (passport.Repository, error) {
 	return &Repository{db: db}, nil
 }
 
-func (r *Repository) Register(ctx context.Context, name, passwordHash string) (model.Session, error) {
+func (r *Repository) Register(ctx context.Context, emailID model.EmailID, name, passwordHash string) (model.Session, error) {
 	var strUserID string
 
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 	query := psql.
 		Insert("users").
-		Columns("name", "password_hash", "created_at", "updated_at").
-		Values(name, passwordHash, time.Now(), time.Now()).
-		Suffix("ON CONFLICT (name) DO NOTHING RETURNING id")
+		Columns("name", "email_id", "password_hash", "created_at", "updated_at").
+		Values(name, emailID.String(), passwordHash, time.Now(), time.Now()).
+		Suffix("ON CONFLICT (email_id) DO NOTHING RETURNING id")
 
 	q, args, err := query.ToSql()
 	if err != nil {
@@ -39,6 +40,11 @@ func (r *Repository) Register(ctx context.Context, name, passwordHash string) (m
 	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&strUserID); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Session{}, model.ErrUserAlreadyExist
+		}
+
+		var pqErr *pq.Error
+		if errors.As(err, &pqErr) && pqErr.Code == "23503" {
+			return model.Session{}, model.ErrEmailNotConfirmed
 		}
 
 		return model.Session{}, fmt.Errorf("execute query: %w", err)
@@ -81,7 +87,8 @@ func (r *Repository) GetUser(ctx context.Context, userID model.UserID) (model.Us
 	}
 
 	return model.User{
-		Name: user.Name,
+		Name:    user.Name,
+		EmailId: user.EmailId,
 
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
@@ -98,7 +105,7 @@ func (r *Repository) UpdateUser(ctx context.Context, userID model.UserID, name, 
 		Set("password_hash", passwordHash).
 		Set("updated_at", time.Now()).
 		Where(sq.Eq{"id": userID.String()}).
-		Suffix("RETURNING id, name, password_hash, created_at, updated_at")
+		Suffix("RETURNING id, email_id, name, password_hash, created_at, updated_at")
 
 	q, args, err := updateQuery.ToSql()
 	if err != nil {
@@ -124,7 +131,8 @@ func (r *Repository) UpdateUser(ctx context.Context, userID model.UserID, name, 
 	}
 
 	return model.User{
-		Name: user.Name,
+		Name:    user.Name,
+		EmailId: user.EmailId,
 
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,

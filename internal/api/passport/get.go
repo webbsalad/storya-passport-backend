@@ -27,7 +27,8 @@ func (i *Implementation) GetUser(ctx context.Context, req *passport.GetUserReque
 	}
 
 	return &passport.User{
-		Name: user.Name,
+		Name:    user.Name,
+		EmailId: user.EmailId,
 
 		CreatedAt: timestamppb.New(user.CreatedAt),
 		UpdatedAt: timestamppb.New(user.UpdatedAt),
