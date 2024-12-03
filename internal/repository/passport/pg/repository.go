@@ -88,6 +88,49 @@ func (r *Repository) GetUser(ctx context.Context, userID model.UserID) (model.Us
 	}, nil
 }
 
+func (r *Repository) UpdateUser(ctx context.Context, userID model.UserID, name, passwordHash string) (model.User, error) {
+	var user User
+
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	updateQuery := psql.
+		Update("users").
+		Set("name", name).
+		Set("password_hash", passwordHash).
+		Set("updated_at", time.Now()).
+		Where(sq.Eq{"id": userID.String()}).
+		Suffix("RETURNING id, name, password_hash, created_at, updated_at")
+
+	q, args, err := updateQuery.ToSql()
+	if err != nil {
+		return model.User{}, fmt.Errorf("build update query: %w", err)
+	}
+
+	if err = r.db.QueryRowxContext(ctx, q, args...).StructScan(&user); err != nil {
+		return model.User{}, fmt.Errorf("execute update query: %w", err)
+	}
+
+	deleteQuery := psql.
+		Delete("user_tokens").
+		Where(sq.Eq{"user_id": userID.String()})
+
+	q, args, err = deleteQuery.ToSql()
+	if err != nil {
+		return model.User{}, fmt.Errorf("build delete query: %w", err)
+	}
+
+	_, err = r.db.ExecContext(ctx, q, args...)
+	if err != nil {
+		return model.User{}, fmt.Errorf("execute delete query: %w", err)
+	}
+
+	return model.User{
+		Name: user.Name,
+
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}, nil
+}
+
 func (r *Repository) GetPasswordHash(ctx context.Context, name string) (string, error) {
 	var passwordHash string
 

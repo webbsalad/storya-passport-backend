@@ -37,8 +37,8 @@ type PassportServiceClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*Passport, error)
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*Passport, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	LogOut(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CheckToken(ctx context.Context, in *CheckTokenRequest, opts ...grpc.CallOption) (*CheckTokenResponse, error)
@@ -82,9 +82,9 @@ func (c *passportServiceClient) RefreshToken(ctx context.Context, in *RefreshTok
 	return out, nil
 }
 
-func (c *passportServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*Passport, error) {
+func (c *passportServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Passport)
+	out := new(User)
 	err := c.cc.Invoke(ctx, PassportService_GetUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -92,9 +92,9 @@ func (c *passportServiceClient) GetUser(ctx context.Context, in *GetUserRequest,
 	return out, nil
 }
 
-func (c *passportServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*Passport, error) {
+func (c *passportServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Passport)
+	out := new(User)
 	err := c.cc.Invoke(ctx, PassportService_UpdateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -139,8 +139,8 @@ type PassportServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
-	GetUser(context.Context, *GetUserRequest) (*Passport, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*Passport, error)
+	GetUser(context.Context, *GetUserRequest) (*User, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*User, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
 	LogOut(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	CheckToken(context.Context, *CheckTokenRequest) (*CheckTokenResponse, error)
@@ -163,10 +163,10 @@ func (UnimplementedPassportServiceServer) Login(context.Context, *LoginRequest) 
 func (UnimplementedPassportServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
-func (UnimplementedPassportServiceServer) GetUser(context.Context, *GetUserRequest) (*Passport, error) {
+func (UnimplementedPassportServiceServer) GetUser(context.Context, *GetUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedPassportServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*Passport, error) {
+func (UnimplementedPassportServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedPassportServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error) {

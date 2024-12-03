@@ -35,22 +35,21 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on Passport with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *Passport) Validate() error {
+// Validate checks the field values on User with the rules defined in the proto
+// definition for this message. If any rules are violated, the first error
+// encountered is returned, or nil if there are no violations.
+func (m *User) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Passport with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in PassportMultiError, or nil
-// if none found.
-func (m *Passport) ValidateAll() error {
+// ValidateAll checks the field values on User with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in UserMultiError, or nil if none found.
+func (m *User) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Passport) validate(all bool) error {
+func (m *User) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -58,7 +57,7 @@ func (m *Passport) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetName()); l < 3 || l > 30 {
-		err := PassportValidationError{
+		err := UserValidationError{
 			field:  "Name",
 			reason: "value length must be between 3 and 30 runes, inclusive",
 		}
@@ -72,7 +71,7 @@ func (m *Passport) validate(all bool) error {
 		switch v := interface{}(m.GetCreatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, PassportValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -80,7 +79,7 @@ func (m *Passport) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, PassportValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -89,7 +88,7 @@ func (m *Passport) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return PassportValidationError{
+			return UserValidationError{
 				field:  "CreatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -101,7 +100,7 @@ func (m *Passport) validate(all bool) error {
 		switch v := interface{}(m.GetUpdatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, PassportValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -109,7 +108,7 @@ func (m *Passport) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, PassportValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -118,7 +117,7 @@ func (m *Passport) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return PassportValidationError{
+			return UserValidationError{
 				field:  "UpdatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -127,18 +126,18 @@ func (m *Passport) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return PassportMultiError(errors)
+		return UserMultiError(errors)
 	}
 
 	return nil
 }
 
-// PassportMultiError is an error wrapping multiple validation errors returned
-// by Passport.ValidateAll() if the designated constraints aren't met.
-type PassportMultiError []error
+// UserMultiError is an error wrapping multiple validation errors returned by
+// User.ValidateAll() if the designated constraints aren't met.
+type UserMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m PassportMultiError) Error() string {
+func (m UserMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -147,11 +146,11 @@ func (m PassportMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m PassportMultiError) AllErrors() []error { return m }
+func (m UserMultiError) AllErrors() []error { return m }
 
-// PassportValidationError is the validation error returned by
-// Passport.Validate if the designated constraints aren't met.
-type PassportValidationError struct {
+// UserValidationError is the validation error returned by User.Validate if the
+// designated constraints aren't met.
+type UserValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -159,22 +158,22 @@ type PassportValidationError struct {
 }
 
 // Field function returns field value.
-func (e PassportValidationError) Field() string { return e.field }
+func (e UserValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e PassportValidationError) Reason() string { return e.reason }
+func (e UserValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e PassportValidationError) Cause() error { return e.cause }
+func (e UserValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e PassportValidationError) Key() bool { return e.key }
+func (e UserValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e PassportValidationError) ErrorName() string { return "PassportValidationError" }
+func (e UserValidationError) ErrorName() string { return "UserValidationError" }
 
 // Error satisfies the builtin error interface
-func (e PassportValidationError) Error() string {
+func (e UserValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -186,14 +185,14 @@ func (e PassportValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sPassport.%s: %s%s",
+		"invalid %sUser.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = PassportValidationError{}
+var _ error = UserValidationError{}
 
 var _ interface {
 	Field() string
@@ -201,4 +200,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = PassportValidationError{}
+} = UserValidationError{}

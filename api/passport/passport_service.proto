@@ -31,13 +31,13 @@ service PassportService {
         };
     };
 
-    rpc GetUser(GetUserRequest) returns (Passport) {
+    rpc GetUser(GetUserRequest) returns (User) {
         option (google.api.http) = {
             get: "/users/{user_id}"
         };
     };
 
-    rpc UpdateUser(UpdateUserRequest) returns (Passport) {
+    rpc UpdateUser(UpdateUserRequest) returns (User) {
         option (google.api.http) = {
             patch: "/users/{user_id}",
             body: "*"
