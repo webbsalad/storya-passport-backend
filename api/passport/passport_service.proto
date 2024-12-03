@@ -44,12 +44,6 @@ service PassportService {
         };
     };
 
-    rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {
-        option (google.api.http) = {
-            delete: "/users/{user_id}"
-        };
-    };
-
     rpc LogOut(google.protobuf.Empty) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             delete: "/log-out"
@@ -61,11 +55,12 @@ service PassportService {
 
 
 message RegisterRequest {
-    string name = 1 [(validate.rules).string = {
+    string email_id = 1 [(validate.rules).string.uuid = true];
+    string name = 2 [(validate.rules).string = {
         min_len: 3,
         max_len: 30
     }];
-    string password = 2 [(validate.rules).string = {
+    string password = 3 [(validate.rules).string = {
         min_len: 7,
         max_len: 30
     }];
@@ -115,10 +110,6 @@ message UpdateUserRequest {
         min_len: 7,
         max_len: 30
     }];
-}
-
-message DeleteUserRequest {
-    string user_id = 1 [(validate.rules).string.uuid = true];
 }
 
 message CheckTokenRequest {

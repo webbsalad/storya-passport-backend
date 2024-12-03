@@ -35,6 +35,9 @@ var (
 	_ = sort.Sort
 )
 
+// define the regex for a UUID once up-front
+var _passport_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+
 // Validate checks the field values on User with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
 // encountered is returned, or nil if there are no violations.
@@ -55,6 +58,18 @@ func (m *User) validate(all bool) error {
 	}
 
 	var errors []error
+
+	if err := m._validateUuid(m.GetEmailId()); err != nil {
+		err = UserValidationError{
+			field:  "EmailId",
+			reason: "value must be a valid UUID",
+			cause:  err,
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if l := utf8.RuneCountInString(m.GetName()); l < 3 || l > 30 {
 		err := UserValidationError{
@@ -127,6 +142,14 @@ func (m *User) validate(all bool) error {
 
 	if len(errors) > 0 {
 		return UserMultiError(errors)
+	}
+
+	return nil
+}
+
+func (m *User) _validateUuid(uuid string) error {
+	if matched := _passport_uuidPattern.MatchString(uuid); !matched {
+		return errors.New("invalid uuid format")
 	}
 
 	return nil

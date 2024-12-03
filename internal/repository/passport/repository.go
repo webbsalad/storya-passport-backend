@@ -7,7 +7,7 @@ import (
 )
 
 type Repository interface {
-	Register(ctx context.Context, name, passwordHash string) (model.Session, error)
+	Register(ctx context.Context, emailID model.EmailID, name, passwordHash string) (model.Session, error)
 	GetUser(ctx context.Context, userID model.UserID) (model.User, error)
 	UpdateUser(ctx context.Context, userID model.UserID, name, passwordHash string) (model.User, error)
 	GetPasswordHash(ctx context.Context, name string) (string, error)
