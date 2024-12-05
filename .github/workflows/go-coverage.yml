@@ -36,7 +36,7 @@ jobs:
 
       - name: Enforce coverage threshold
         run: |
-          MINIMUM_COVERAGE=0
+          MINIMUM_COVERAGE=10
           echo "Checking if coverage ($COVERAGE_PERCENT%) meets the minimum threshold ($MINIMUM_COVERAGE%)."
           if (( $(echo "$COVERAGE_PERCENT < $MINIMUM_COVERAGE" | bc -l) )); then
             echo "Code coverage ($COVERAGE_PERCENT%) is below the acceptable threshold ($MINIMUM_COVERAGE%)."
