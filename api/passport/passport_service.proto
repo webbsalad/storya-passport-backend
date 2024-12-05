@@ -10,6 +10,8 @@ import "google/protobuf/empty.proto";
 option go_package = "github.com/webbsalad/storya-passport-backend/passport;passport";
 
 service PassportService {
+    rpc TestGen(google.protobuf.Empty) returns (google.protobuf.Empty);
+    
     rpc Register(RegisterRequest) returns (RegisterResponse) {
         option (google.api.http) = {
             post: "/register",
