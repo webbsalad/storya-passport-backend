@@ -19,7 +19,7 @@ func (s *Service) CheckToken(ctx context.Context, token string) (model.UserID, m
 	}
 
 	if storedVersion != session.Version {
-		return model.UserID{}, model.DeviceID{}, "", model.ErrWrongPassword
+		return model.UserID{}, model.DeviceID{}, "", model.ErrExpiredSession
 	}
 
 	return session.UserID, session.DeviceID, tokenType, nil
