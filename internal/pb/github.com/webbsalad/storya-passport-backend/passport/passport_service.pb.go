@@ -137,7 +137,7 @@ func (x *RegisterResponse) GetAccessToken() string {
 	return ""
 }
 
-type LoginRequest struct {
+type LogInRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -146,20 +146,20 @@ type LoginRequest struct {
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 }
 
-func (x *LoginRequest) Reset() {
-	*x = LoginRequest{}
+func (x *LogInRequest) Reset() {
+	*x = LogInRequest{}
 	mi := &file_api_passport_passport_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoginRequest) String() string {
+func (x *LogInRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoginRequest) ProtoMessage() {}
+func (*LogInRequest) ProtoMessage() {}
 
-func (x *LoginRequest) ProtoReflect() protoreflect.Message {
+func (x *LogInRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_passport_passport_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -171,26 +171,26 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
-func (*LoginRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use LogInRequest.ProtoReflect.Descriptor instead.
+func (*LogInRequest) Descriptor() ([]byte, []int) {
 	return file_api_passport_passport_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *LoginRequest) GetName() string {
+func (x *LogInRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *LoginRequest) GetPassword() string {
+func (x *LogInRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
 	}
 	return ""
 }
 
-type LoginResponse struct {
+type LogInResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -199,20 +199,20 @@ type LoginResponse struct {
 	AccessToken  string `protobuf:"bytes,2,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 }
 
-func (x *LoginResponse) Reset() {
-	*x = LoginResponse{}
+func (x *LogInResponse) Reset() {
+	*x = LogInResponse{}
 	mi := &file_api_passport_passport_service_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoginResponse) String() string {
+func (x *LogInResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoginResponse) ProtoMessage() {}
+func (*LogInResponse) ProtoMessage() {}
 
-func (x *LoginResponse) ProtoReflect() protoreflect.Message {
+func (x *LogInResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_api_passport_passport_service_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -224,19 +224,19 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
-func (*LoginResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use LogInResponse.ProtoReflect.Descriptor instead.
+func (*LogInResponse) Descriptor() ([]byte, []int) {
 	return file_api_passport_passport_service_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *LoginResponse) GetRefreshToken() string {
+func (x *LogInResponse) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
 	}
 	return ""
 }
 
-func (x *LoginResponse) GetAccessToken() string {
+func (x *LogInResponse) GetAccessToken() string {
 	if x != nil {
 		return x.AccessToken
 	}
@@ -580,12 +580,12 @@ var file_api_passport_passport_service_proto_rawDesc = []byte{
 	0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73,
 	0x73, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61,
 	0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x54, 0x0a, 0x0c, 0x4c, 0x6f,
-	0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x04, 0x6e, 0x61,
+	0x67, 0x49, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x04, 0x6e, 0x61,
 	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x09, 0xfa, 0x42, 0x06, 0x72, 0x04, 0x10,
 	0x03, 0x18, 0x1e, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x25, 0x0a, 0x08, 0x70, 0x61, 0x73,
 	0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x09, 0xfa, 0x42, 0x06,
 	0x72, 0x04, 0x10, 0x07, 0x18, 0x1e, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
-	0x22, 0x57, 0x0a, 0x0d, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x22, 0x57, 0x0a, 0x0d, 0x4c, 0x6f, 0x67, 0x49, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x12, 0x23, 0x0a, 0x0d, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x5f, 0x74, 0x6f, 0x6b,
 	0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73,
 	0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73,
@@ -629,9 +629,9 @@ var file_api_passport_passport_service_proto_rawDesc = []byte{
 	0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65,
 	0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x14, 0x82, 0xd3, 0xe4, 0x93, 0x02,
 	0x0e, 0x3a, 0x01, 0x2a, 0x22, 0x09, 0x2f, 0x72, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x12,
-	0x4b, 0x0a, 0x05, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x16, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70,
-	0x6f, 0x72, 0x74, 0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x17, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x4c, 0x6f, 0x67, 0x69,
+	0x4b, 0x0a, 0x05, 0x4c, 0x6f, 0x67, 0x49, 0x6e, 0x12, 0x16, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70,
+	0x6f, 0x72, 0x74, 0x2e, 0x4c, 0x6f, 0x67, 0x49, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x17, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x4c, 0x6f, 0x67, 0x49,
 	0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x11, 0x82, 0xd3, 0xe4, 0x93, 0x02,
 	0x0b, 0x3a, 0x01, 0x2a, 0x22, 0x06, 0x2f, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x62, 0x0a, 0x0c,
 	0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x1d, 0x2e, 0x70,
@@ -683,8 +683,8 @@ var file_api_passport_passport_service_proto_msgTypes = make([]protoimpl.Message
 var file_api_passport_passport_service_proto_goTypes = []any{
 	(*RegisterRequest)(nil),      // 0: passport.RegisterRequest
 	(*RegisterResponse)(nil),     // 1: passport.RegisterResponse
-	(*LoginRequest)(nil),         // 2: passport.LoginRequest
-	(*LoginResponse)(nil),        // 3: passport.LoginResponse
+	(*LogInRequest)(nil),         // 2: passport.LogInRequest
+	(*LogInResponse)(nil),        // 3: passport.LogInResponse
 	(*RefreshTokenRequest)(nil),  // 4: passport.RefreshTokenRequest
 	(*RefreshTokenResponse)(nil), // 5: passport.RefreshTokenResponse
 	(*GetUserRequest)(nil),       // 6: passport.GetUserRequest
@@ -696,14 +696,14 @@ var file_api_passport_passport_service_proto_goTypes = []any{
 }
 var file_api_passport_passport_service_proto_depIdxs = []int32{
 	0,  // 0: passport.PassportService.Register:input_type -> passport.RegisterRequest
-	2,  // 1: passport.PassportService.Login:input_type -> passport.LoginRequest
+	2,  // 1: passport.PassportService.LogIn:input_type -> passport.LogInRequest
 	4,  // 2: passport.PassportService.RefreshToken:input_type -> passport.RefreshTokenRequest
 	6,  // 3: passport.PassportService.GetUser:input_type -> passport.GetUserRequest
 	7,  // 4: passport.PassportService.UpdateUser:input_type -> passport.UpdateUserRequest
 	10, // 5: passport.PassportService.LogOut:input_type -> google.protobuf.Empty
 	8,  // 6: passport.PassportService.CheckToken:input_type -> passport.CheckTokenRequest
 	1,  // 7: passport.PassportService.Register:output_type -> passport.RegisterResponse
-	3,  // 8: passport.PassportService.Login:output_type -> passport.LoginResponse
+	3,  // 8: passport.PassportService.LogIn:output_type -> passport.LogInResponse
 	5,  // 9: passport.PassportService.RefreshToken:output_type -> passport.RefreshTokenResponse
 	11, // 10: passport.PassportService.GetUser:output_type -> passport.User
 	11, // 11: passport.PassportService.UpdateUser:output_type -> passport.User

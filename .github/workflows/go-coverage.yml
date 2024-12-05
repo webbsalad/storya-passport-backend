@@ -5,7 +5,6 @@ on:
     types: [opened, reopened, synchronize]
   push:
 
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,16 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: stable
 
-
       - name: Run tests with coverage
-        run: go test -cover -coverprofile=coverage.out ./...
-
+        run: go test -cover -coverprofile=coverage.out ./internal/api/passport/... ./internal/service/passport/v1/...
 
       - name: Calculate coverage percentage
         id: calculate-coverage
@@ -33,17 +29,15 @@ jobs:
           echo "COVERAGE_PERCENT=$COVERAGE" >> $GITHUB_ENV
         shell: bash
 
-
       - name: Enforce coverage threshold
         run: |
-          MINIMUM_COVERAGE=10
+          MINIMUM_COVERAGE=50
           echo "Checking if coverage ($COVERAGE_PERCENT%) meets the minimum threshold ($MINIMUM_COVERAGE%)."
           if (( $(echo "$COVERAGE_PERCENT < $MINIMUM_COVERAGE" | bc -l) )); then
             echo "Code coverage ($COVERAGE_PERCENT%) is below the acceptable threshold ($MINIMUM_COVERAGE%)."
             exit 1
           fi
         shell: bash
-
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4

@@ -7,7 +7,7 @@ import (
 	"github.com/webbsalad/storya-passport-backend/internal/model"
 )
 
-func (s *Service) Login(ctx context.Context, name, password string) (model.AuthTokens, error) {
+func (s *Service) LogIn(ctx context.Context, name, password string) (model.AuthTokens, error) {
 	storedHash, err := s.passportRepository.GetPasswordHash(ctx, name)
 	if err != nil {
 		return model.AuthTokens{}, fmt.Errorf("get password hash: %w", err)

@@ -3,11 +3,11 @@
 CREATE TABLE users
 (
     id UUID DEFAULT uuid_generate_v4() NOT NULL CONSTRAINT users_pkey PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL,
-    email_id UUID UNIQUE,
+    email_id UUID NOT NULL UNIQUE,
     
     CONSTRAINT fk_email FOREIGN KEY (email_id) REFERENCES confirmed_emails(id) ON DELETE CASCADE
 );
