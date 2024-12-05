@@ -82,9 +82,9 @@ func TestService_Check(t *testing.T) {
 			},
 
 			result: result{
-				userID:    testUserID,
-				deviceID:  testDeviceID,
-				tokenType: "refresh",
+				userID:    model.UserID{},
+				deviceID:  model.DeviceID{},
+				tokenType: "",
 				err:       model.ErrExpiredSession,
 			},
 		},
@@ -104,7 +104,10 @@ func TestService_Check(t *testing.T) {
 			},
 
 			result: result{
-				err: model.ErrUserNotFound,
+				userID:    model.UserID{},
+				deviceID:  model.DeviceID{},
+				tokenType: "",
+				err:       model.ErrUserNotFound,
 			},
 		},
 	}

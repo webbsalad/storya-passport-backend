@@ -38,5 +38,5 @@ mocks:
 
 quality:
 	go test -cover -coverprofile=coverage.out ./... 
-	# go tool cover -func=coverage.out 
+	#go tool cover -func=coverage.out 
 	golangci-lint run 

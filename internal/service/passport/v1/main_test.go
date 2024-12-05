@@ -15,6 +15,9 @@ var (
 	testDeviceID, _ = model.DeviceIDFromString("1cde4608-a972-4ee1-98b2-0dbdf654d0d2")
 	//wrongUserID, _   = model.UserIDFromString("00000000-000-0000-0000-0000000000000")
 	//wrongDeviceID, _ = model.DeviceIDFromString("00000000-000-0000-0000-0000000000000")
+	testEmailID, _ = model.EmailIDFromString("1cde4608-a972-4ee1-98b2-0dbdf651d0d2")
+
+	testUser    = model.User{Name: "name", EmailId: testEmailID}
 	testVersion = 1
 	//testSecret       = "test secret"
 

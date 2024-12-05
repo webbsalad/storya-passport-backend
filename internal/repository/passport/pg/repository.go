@@ -83,12 +83,20 @@ func (r *Repository) GetUser(ctx context.Context, userID model.UserID) (model.Us
 	}
 
 	if err = r.db.GetContext(ctx, &user, q, args...); err != nil {
-		return model.User{}, fmt.Errorf("execute query: %w", err)
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.User{}, model.ErrUserNotFound
+		}
+		return model.User{}, fmt.Errorf("get user: %w", err)
+	}
+
+	emailID, err := model.EmailIDFromString(user.EmailId)
+	if err != nil {
+		return model.User{}, fmt.Errorf("convert str to email id: %w", err)
 	}
 
 	return model.User{
 		Name:    user.Name,
-		EmailId: user.EmailId,
+		EmailId: emailID,
 
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
@@ -130,9 +138,14 @@ func (r *Repository) UpdateUser(ctx context.Context, userID model.UserID, name, 
 		return model.User{}, fmt.Errorf("execute delete query: %w", err)
 	}
 
+	emailID, err := model.EmailIDFromString(user.EmailId)
+	if err != nil {
+		return model.User{}, fmt.Errorf("convert str to email id: %w", err)
+	}
+
 	return model.User{
 		Name:    user.Name,
-		EmailId: user.EmailId,
+		EmailId: emailID,
 
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,

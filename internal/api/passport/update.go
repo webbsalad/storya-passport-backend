@@ -28,7 +28,7 @@ func (i *Implementation) UpdateUser(ctx context.Context, req *passport.UpdateUse
 
 	return &passport.User{
 		Name:    user.Name,
-		EmailId: user.EmailId,
+		EmailId: user.EmailId.String(),
 
 		CreatedAt: timestamppb.New(user.CreatedAt),
 		UpdatedAt: timestamppb.New(user.UpdatedAt),
