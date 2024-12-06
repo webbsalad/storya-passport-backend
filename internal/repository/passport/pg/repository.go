@@ -166,8 +166,11 @@ func (r *Repository) GetPasswordHash(ctx context.Context, name string) (string, 
 		return "", fmt.Errorf("build query: %w", err)
 	}
 
-	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&passwordHash); err != nil {
-		return "", fmt.Errorf("execute query: %w", err)
+	if err = r.db.GetContext(ctx, &passwordHash, q, args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", model.ErrUserNotFound
+		}
+		return "", fmt.Errorf("get password hash: %w", err)
 	}
 
 	return passwordHash, nil
@@ -188,8 +191,11 @@ func (r *Repository) GetSessionInfo(ctx context.Context, name string) (model.Ses
 		return model.Session{}, fmt.Errorf("build query: %w", err)
 	}
 
-	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&strUserID); err != nil {
-		return model.Session{}, fmt.Errorf("execute query: %w", err)
+	if err = r.db.GetContext(ctx, &strUserID, q, args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Session{}, model.ErrUserNotFound
+		}
+		return model.Session{}, fmt.Errorf("get session info: %w", err)
 	}
 
 	userID, err := model.UserIDFromString(strUserID)
