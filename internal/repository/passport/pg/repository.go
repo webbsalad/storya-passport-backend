@@ -38,13 +38,13 @@ func (r *Repository) Register(ctx context.Context, emailID model.EmailID, name, 
 	}
 
 	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&strUserID); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return model.Session{}, model.ErrUserAlreadyExist
-		}
-
 		var pqErr *pq.Error
 		if errors.As(err, &pqErr) && pqErr.Code == "23503" {
 			return model.Session{}, model.ErrEmailNotConfirmed
+		}
+
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Session{}, model.ErrUserAlreadyExist
 		}
 
 		return model.Session{}, fmt.Errorf("execute query: %w", err)
