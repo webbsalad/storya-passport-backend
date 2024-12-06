@@ -35,6 +35,7 @@ proto-deps:
 
 mocks:
 	mockgen -source ./internal/repository/passport/repository.go -destination ./internal/repository/passport/mock/repository.go -package mock_passport
+	mockgen -source ./internal/service/passport/*.go -destination ./internal/service/passport/mock/service.go -package mock_passport
 
 quality:
 	go test -cover -coverprofile=coverage.out ./... 
