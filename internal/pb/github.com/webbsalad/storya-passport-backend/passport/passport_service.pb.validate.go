@@ -284,22 +284,22 @@ var _ interface {
 	ErrorName() string
 } = RegisterResponseValidationError{}
 
-// Validate checks the field values on LoginRequest with the rules defined in
+// Validate checks the field values on LogInRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *LoginRequest) Validate() error {
+func (m *LogInRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on LoginRequest with the rules defined
+// ValidateAll checks the field values on LogInRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in LoginRequestMultiError, or
+// result is a list of violation errors wrapped in LogInRequestMultiError, or
 // nil if none found.
-func (m *LoginRequest) ValidateAll() error {
+func (m *LogInRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *LoginRequest) validate(all bool) error {
+func (m *LogInRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -307,7 +307,7 @@ func (m *LoginRequest) validate(all bool) error {
 	var errors []error
 
 	if l := utf8.RuneCountInString(m.GetName()); l < 3 || l > 30 {
-		err := LoginRequestValidationError{
+		err := LogInRequestValidationError{
 			field:  "Name",
 			reason: "value length must be between 3 and 30 runes, inclusive",
 		}
@@ -318,7 +318,7 @@ func (m *LoginRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetPassword()); l < 7 || l > 30 {
-		err := LoginRequestValidationError{
+		err := LogInRequestValidationError{
 			field:  "Password",
 			reason: "value length must be between 7 and 30 runes, inclusive",
 		}
@@ -329,18 +329,18 @@ func (m *LoginRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return LoginRequestMultiError(errors)
+		return LogInRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// LoginRequestMultiError is an error wrapping multiple validation errors
-// returned by LoginRequest.ValidateAll() if the designated constraints aren't met.
-type LoginRequestMultiError []error
+// LogInRequestMultiError is an error wrapping multiple validation errors
+// returned by LogInRequest.ValidateAll() if the designated constraints aren't met.
+type LogInRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m LoginRequestMultiError) Error() string {
+func (m LogInRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -349,11 +349,11 @@ func (m LoginRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m LoginRequestMultiError) AllErrors() []error { return m }
+func (m LogInRequestMultiError) AllErrors() []error { return m }
 
-// LoginRequestValidationError is the validation error returned by
-// LoginRequest.Validate if the designated constraints aren't met.
-type LoginRequestValidationError struct {
+// LogInRequestValidationError is the validation error returned by
+// LogInRequest.Validate if the designated constraints aren't met.
+type LogInRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -361,22 +361,22 @@ type LoginRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e LoginRequestValidationError) Field() string { return e.field }
+func (e LogInRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e LoginRequestValidationError) Reason() string { return e.reason }
+func (e LogInRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e LoginRequestValidationError) Cause() error { return e.cause }
+func (e LogInRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e LoginRequestValidationError) Key() bool { return e.key }
+func (e LogInRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e LoginRequestValidationError) ErrorName() string { return "LoginRequestValidationError" }
+func (e LogInRequestValidationError) ErrorName() string { return "LogInRequestValidationError" }
 
 // Error satisfies the builtin error interface
-func (e LoginRequestValidationError) Error() string {
+func (e LogInRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -388,14 +388,14 @@ func (e LoginRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sLoginRequest.%s: %s%s",
+		"invalid %sLogInRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = LoginRequestValidationError{}
+var _ error = LogInRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -403,24 +403,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = LoginRequestValidationError{}
+} = LogInRequestValidationError{}
 
-// Validate checks the field values on LoginResponse with the rules defined in
+// Validate checks the field values on LogInResponse with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *LoginResponse) Validate() error {
+func (m *LogInResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on LoginResponse with the rules defined
+// ValidateAll checks the field values on LogInResponse with the rules defined
 // in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in LoginResponseMultiError, or
+// result is a list of violation errors wrapped in LogInResponseMultiError, or
 // nil if none found.
-func (m *LoginResponse) ValidateAll() error {
+func (m *LogInResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *LoginResponse) validate(all bool) error {
+func (m *LogInResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -432,19 +432,19 @@ func (m *LoginResponse) validate(all bool) error {
 	// no validation rules for AccessToken
 
 	if len(errors) > 0 {
-		return LoginResponseMultiError(errors)
+		return LogInResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// LoginResponseMultiError is an error wrapping multiple validation errors
-// returned by LoginResponse.ValidateAll() if the designated constraints
+// LogInResponseMultiError is an error wrapping multiple validation errors
+// returned by LogInResponse.ValidateAll() if the designated constraints
 // aren't met.
-type LoginResponseMultiError []error
+type LogInResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m LoginResponseMultiError) Error() string {
+func (m LogInResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -453,11 +453,11 @@ func (m LoginResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m LoginResponseMultiError) AllErrors() []error { return m }
+func (m LogInResponseMultiError) AllErrors() []error { return m }
 
-// LoginResponseValidationError is the validation error returned by
-// LoginResponse.Validate if the designated constraints aren't met.
-type LoginResponseValidationError struct {
+// LogInResponseValidationError is the validation error returned by
+// LogInResponse.Validate if the designated constraints aren't met.
+type LogInResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -465,22 +465,22 @@ type LoginResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e LoginResponseValidationError) Field() string { return e.field }
+func (e LogInResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e LoginResponseValidationError) Reason() string { return e.reason }
+func (e LogInResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e LoginResponseValidationError) Cause() error { return e.cause }
+func (e LogInResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e LoginResponseValidationError) Key() bool { return e.key }
+func (e LogInResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e LoginResponseValidationError) ErrorName() string { return "LoginResponseValidationError" }
+func (e LogInResponseValidationError) ErrorName() string { return "LogInResponseValidationError" }
 
 // Error satisfies the builtin error interface
-func (e LoginResponseValidationError) Error() string {
+func (e LogInResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -492,14 +492,14 @@ func (e LoginResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sLoginResponse.%s: %s%s",
+		"invalid %sLogInResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = LoginResponseValidationError{}
+var _ error = LogInResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -507,7 +507,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = LoginResponseValidationError{}
+} = LogInResponseValidationError{}
 
 // Validate checks the field values on RefreshTokenRequest with the rules
 // defined in the proto definition for this message. If any rules are

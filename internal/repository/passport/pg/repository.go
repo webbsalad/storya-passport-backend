@@ -38,13 +38,13 @@ func (r *Repository) Register(ctx context.Context, emailID model.EmailID, name, 
 	}
 
 	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&strUserID); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return model.Session{}, model.ErrUserAlreadyExist
-		}
-
 		var pqErr *pq.Error
 		if errors.As(err, &pqErr) && pqErr.Code == "23503" {
 			return model.Session{}, model.ErrEmailNotConfirmed
+		}
+
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Session{}, model.ErrUserAlreadyExist
 		}
 
 		return model.Session{}, fmt.Errorf("execute query: %w", err)
@@ -83,12 +83,20 @@ func (r *Repository) GetUser(ctx context.Context, userID model.UserID) (model.Us
 	}
 
 	if err = r.db.GetContext(ctx, &user, q, args...); err != nil {
-		return model.User{}, fmt.Errorf("execute query: %w", err)
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.User{}, model.ErrUserNotFound
+		}
+		return model.User{}, fmt.Errorf("get user: %w", err)
+	}
+
+	emailID, err := model.EmailIDFromString(user.EmailId)
+	if err != nil {
+		return model.User{}, fmt.Errorf("convert str to email id: %w", err)
 	}
 
 	return model.User{
 		Name:    user.Name,
-		EmailId: user.EmailId,
+		EmailId: emailID,
 
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
@@ -130,9 +138,14 @@ func (r *Repository) UpdateUser(ctx context.Context, userID model.UserID, name, 
 		return model.User{}, fmt.Errorf("execute delete query: %w", err)
 	}
 
+	emailID, err := model.EmailIDFromString(user.EmailId)
+	if err != nil {
+		return model.User{}, fmt.Errorf("convert str to email id: %w", err)
+	}
+
 	return model.User{
 		Name:    user.Name,
-		EmailId: user.EmailId,
+		EmailId: emailID,
 
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
@@ -153,8 +166,11 @@ func (r *Repository) GetPasswordHash(ctx context.Context, name string) (string, 
 		return "", fmt.Errorf("build query: %w", err)
 	}
 
-	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&passwordHash); err != nil {
-		return "", fmt.Errorf("execute query: %w", err)
+	if err = r.db.GetContext(ctx, &passwordHash, q, args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", model.ErrUserNotFound
+		}
+		return "", fmt.Errorf("get password hash: %w", err)
 	}
 
 	return passwordHash, nil
@@ -175,8 +191,11 @@ func (r *Repository) GetSessionInfo(ctx context.Context, name string) (model.Ses
 		return model.Session{}, fmt.Errorf("build query: %w", err)
 	}
 
-	if err = r.db.QueryRowContext(ctx, q, args...).Scan(&strUserID); err != nil {
-		return model.Session{}, fmt.Errorf("execute query: %w", err)
+	if err = r.db.GetContext(ctx, &strUserID, q, args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Session{}, model.ErrUserNotFound
+		}
+		return model.Session{}, fmt.Errorf("get session info: %w", err)
 	}
 
 	userID, err := model.UserIDFromString(strUserID)
