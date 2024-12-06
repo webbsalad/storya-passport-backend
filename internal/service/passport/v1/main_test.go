@@ -53,3 +53,21 @@ func getTestDeps(t *testing.T) *serviceTestDeps {
 		passportRepository: passportRepository,
 	}
 }
+
+type hashMatcher struct {
+	password string
+}
+
+func (hm hashMatcher) Matches(x interface{}) bool {
+	hashedPassword, ok := x.(string)
+	if !ok {
+		return false
+	}
+
+	err := comparePassword(hashedPassword, hm.password)
+	return err == nil
+}
+
+func (hm hashMatcher) String() string {
+	return "matches hashed password"
+}
