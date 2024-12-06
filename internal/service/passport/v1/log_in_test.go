@@ -36,10 +36,10 @@ func TestService_LogIn(t *testing.T) {
 			mocks: func(tc testCase, deps *serviceTestDeps) {
 				deps.passportRepository.EXPECT().
 					GetPasswordHash(gomock.Any(), tc.args.name).
-					Return(testHash, nil)
+					Return(tc.args.hash, nil)
 				deps.passportRepository.EXPECT().
 					GetSessionInfo(gomock.Any(), tc.args.name).
-					Return(testSession, nil)
+					Return(tc.args.session, nil)
 
 			},
 			args: args{
@@ -77,7 +77,7 @@ func TestService_LogIn(t *testing.T) {
 			mocks: func(tc testCase, deps *serviceTestDeps) {
 				deps.passportRepository.EXPECT().
 					GetPasswordHash(gomock.Any(), tc.args.name).
-					Return(testHash, nil)
+					Return(tc.args.hash, nil)
 				deps.passportRepository.EXPECT().
 					GetSessionInfo(gomock.Any(), tc.args.name).
 					Return(model.Session{}, model.ErrUserNotFound)
@@ -92,6 +92,25 @@ func TestService_LogIn(t *testing.T) {
 			result: result{
 				authTokens: model.AuthTokens{},
 				err:        model.ErrUserNotFound,
+			},
+		},
+		{
+			name: "session not found",
+			mocks: func(tc testCase, deps *serviceTestDeps) {
+				deps.passportRepository.EXPECT().
+					GetPasswordHash(gomock.Any(), tc.args.name).
+					Return("", nil)
+
+			},
+			args: args{
+				name:     testName,
+				session:  model.Session{},
+				password: testPassword,
+				hash:     testHash,
+			},
+			result: result{
+				authTokens: model.AuthTokens{},
+				err:        model.ErrWrongPassword,
 			},
 		},
 	}

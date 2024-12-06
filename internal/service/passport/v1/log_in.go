@@ -14,7 +14,7 @@ func (s *Service) LogIn(ctx context.Context, name, password string) (model.AuthT
 	}
 
 	if err = comparePassword(storedHash, password); err != nil {
-		return model.AuthTokens{}, fmt.Errorf("incorrect password: %w", err)
+		return model.AuthTokens{}, model.ErrWrongPassword
 	}
 
 	session, err := s.passportRepository.GetSessionInfo(ctx, name)
