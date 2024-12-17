@@ -20,6 +20,7 @@ var (
 	testAuthTokens = model.AuthTokens{AccessToken: testAccessToken, RefreshToken: testRefreshToken}
 
 	testName     = "name"
+	testEmail    = "test@example.com"
 	testVersion  = 1
 	testPassword = "1234567"
 	testHash     = "$2a$10$wLvXkSKzSEqAy5Et66.g4OGe7reW8mQMjczE26Xkx7cmG.4MmZDVO"
