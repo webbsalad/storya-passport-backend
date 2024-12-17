@@ -52,6 +52,20 @@ func (mr *MockServiceMockRecorder) CheckToken(ctx, token interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckToken", reflect.TypeOf((*MockService)(nil).CheckToken), ctx, token)
 }
 
+// Delete mocks base method.
+func (m *MockService) Delete(ctx context.Context, email_id model.EmailID) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, email_id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockServiceMockRecorder) Delete(ctx, email_id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockService)(nil).Delete), ctx, email_id)
+}
+
 // GetUser mocks base method.
 func (m *MockService) GetUser(ctx context.Context, userID model.UserID) (model.User, error) {
 	m.ctrl.T.Helper()

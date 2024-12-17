@@ -308,6 +308,49 @@ func (r *Repository) LogOut(ctx context.Context, userID model.UserID, deviceID m
 	return nil
 }
 
+func (r *Repository) Delete(ctx context.Context, userID model.UserID, email string) error {
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+
+	subQuery := sq.Select("email_id").
+		From("users").
+		Where(
+			sq.Eq{"id": userID.String()},
+		)
+
+	subQuerySql, subQueryArgs, err := subQuery.ToSql()
+	if err != nil {
+		return fmt.Errorf("build subquery: %w", err)
+	}
+
+	query := psql.
+		Delete("confirmed_emails").
+		Where(
+			sq.Eq{"email": email},
+		).
+		Where(fmt.Sprintf("id = (%s)", subQuerySql), subQueryArgs...)
+
+	q, args, err := query.ToSql()
+	if err != nil {
+		return fmt.Errorf("build query: %w", err)
+	}
+
+	res, err := r.db.ExecContext(ctx, q, args...)
+	if err != nil {
+		return fmt.Errorf("delete email: %w", err)
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("get affected rows: %w", err)
+	}
+
+	if rowAffected == 0 {
+		return model.ErrUserNotFound
+	}
+
+	return nil
+}
+
 func (r *Repository) createSession(userID model.UserID) (model.DeviceID, error) {
 	var strDeviceID string
 
