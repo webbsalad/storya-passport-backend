@@ -308,6 +308,61 @@ func (r *Repository) LogOut(ctx context.Context, userID model.UserID, deviceID m
 	return nil
 }
 
+func (r *Repository) Delete(ctx context.Context, userID model.UserID, emailID model.EmailID) error {
+	var storedEmailID string
+
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	selectQuery := psql.
+		Select("email_id").
+		From("users").
+		Where(
+			sq.Eq{"id": userID.String()},
+		)
+
+	q, args, err := selectQuery.ToSql()
+	if err != nil {
+		return fmt.Errorf("build select query: %w", err)
+	}
+
+	if err = r.db.GetContext(ctx, &storedEmailID, q, args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.ErrUserNotFound
+		}
+		return fmt.Errorf("get user: %w", err)
+	}
+
+	if storedEmailID != emailID.String() {
+		return fmt.Errorf("inconsistency stored and received email id")
+	}
+
+	deleteQuery := psql.
+		Delete("confirmed_emails").
+		Where(
+			sq.Eq{"id": emailID.String()},
+		)
+
+	q, args, err = deleteQuery.ToSql()
+	if err != nil {
+		return fmt.Errorf("build delete query: %w", err)
+	}
+
+	res, err := r.db.ExecContext(ctx, q, args...)
+	if err != nil {
+		return fmt.Errorf("delete email: %w", err)
+	}
+
+	rowAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("get affected rows: %w", err)
+	}
+
+	if rowAffected == 0 {
+		return model.ErrUserNotFound
+	}
+
+	return nil
+}
+
 func (r *Repository) createSession(userID model.UserID) (model.DeviceID, error) {
 	var strDeviceID string
 

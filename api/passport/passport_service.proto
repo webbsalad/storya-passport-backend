@@ -50,6 +50,12 @@ service PassportService {
         };
     };
 
+    rpc Delete(DeleteRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/emails/{email_id}"
+        };
+    };
+
     rpc CheckToken(CheckTokenRequest) returns (CheckTokenResponse);
 }
 
@@ -110,6 +116,10 @@ message UpdateUserRequest {
         min_len: 7,
         max_len: 30
     }];
+}
+
+message DeleteRequest {
+    string email_id = 1 [(validate.rules).string.uuid = true];
 }
 
 message CheckTokenRequest {

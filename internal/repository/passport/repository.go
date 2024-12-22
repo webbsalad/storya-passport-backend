@@ -15,4 +15,5 @@ type Repository interface {
 	GetTokenVersion(ctx context.Context, userID model.UserID, deviceID model.DeviceID) (int, error)
 	UpdateTokenVersion(ctx context.Context, session model.Session) error
 	LogOut(ctx context.Context, userID model.UserID, deviceID model.DeviceID) error
+	Delete(ctx context.Context, userID model.UserID, emailID model.EmailID) error
 }
