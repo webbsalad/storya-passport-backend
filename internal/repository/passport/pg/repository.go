@@ -308,30 +308,42 @@ func (r *Repository) LogOut(ctx context.Context, userID model.UserID, deviceID m
 	return nil
 }
 
-func (r *Repository) Delete(ctx context.Context, userID model.UserID, email string) error {
-	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+func (r *Repository) Delete(ctx context.Context, userID model.UserID, emailID model.EmailID) error {
+	var storedEmailID string
 
-	subQuery := sq.Select("email_id").
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+	selectQuery := psql.
+		Select("email_id").
 		From("users").
 		Where(
 			sq.Eq{"id": userID.String()},
 		)
 
-	subQuerySql, subQueryArgs, err := subQuery.ToSql()
+	q, args, err := selectQuery.ToSql()
 	if err != nil {
-		return fmt.Errorf("build subquery: %w", err)
+		return fmt.Errorf("build select query: %w", err)
 	}
 
-	query := psql.
+	if err = r.db.GetContext(ctx, &storedEmailID, q, args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.ErrUserNotFound
+		}
+		return fmt.Errorf("get user: %w", err)
+	}
+
+	if storedEmailID != emailID.String() {
+		return fmt.Errorf("inconsistency stored and received email id")
+	}
+
+	deleteQuery := psql.
 		Delete("confirmed_emails").
 		Where(
-			sq.Eq{"email": email},
-		).
-		Where(fmt.Sprintf("id = (%s)", subQuerySql), subQueryArgs...)
+			sq.Eq{"id": emailID.String()},
+		)
 
-	q, args, err := query.ToSql()
+	q, args, err = deleteQuery.ToSql()
 	if err != nil {
-		return fmt.Errorf("build query: %w", err)
+		return fmt.Errorf("build delete query: %w", err)
 	}
 
 	res, err := r.db.ExecContext(ctx, q, args...)

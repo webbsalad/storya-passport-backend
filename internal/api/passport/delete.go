@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/webbsalad/storya-passport-backend/internal/convertor"
+	"github.com/webbsalad/storya-passport-backend/internal/model"
 	"github.com/webbsalad/storya-passport-backend/internal/pb/github.com/webbsalad/storya-passport-backend/passport"
 	"github.com/webbsalad/storya-passport-backend/internal/utils/metadata"
 	"google.golang.org/grpc/codes"
@@ -21,7 +22,12 @@ func (i *Implementation) Delete(ctx context.Context, req *passport.DeleteRequest
 		return nil, status.Errorf(codes.Unauthenticated, "%v", err)
 	}
 
-	if err = i.PassportService.Delete(ctx, userID, req.GetEmail()); err != nil {
+	emailID, err := model.EmailIDFromString(req.GetEmailId())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	if err = i.PassportService.Delete(ctx, userID, emailID); err != nil {
 		return nil, convertor.ConvertError(err)
 	}
 

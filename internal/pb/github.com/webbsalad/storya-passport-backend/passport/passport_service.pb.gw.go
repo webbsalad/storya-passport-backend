@@ -251,14 +251,14 @@ func request_PassportService_Delete_0(ctx context.Context, marshaler runtime.Mar
 		_   = err
 	)
 
-	val, ok = pathParams["email"]
+	val, ok = pathParams["email_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "email")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "email_id")
 	}
 
-	protoReq.Email, err = runtime.String(val)
+	protoReq.EmailId, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "email", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "email_id", err)
 	}
 
 	msg, err := client.Delete(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -277,14 +277,14 @@ func local_request_PassportService_Delete_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["email"]
+	val, ok = pathParams["email_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "email")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "email_id")
 	}
 
-	protoReq.Email, err = runtime.String(val)
+	protoReq.EmailId, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "email", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "email_id", err)
 	}
 
 	msg, err := server.Delete(ctx, &protoReq)
@@ -483,7 +483,7 @@ func RegisterPassportServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/passport.PassportService/Delete", runtime.WithHTTPPathPattern("/emails/{email}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/passport.PassportService/Delete", runtime.WithHTTPPathPattern("/emails/{email_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -704,7 +704,7 @@ func RegisterPassportServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/passport.PassportService/Delete", runtime.WithHTTPPathPattern("/emails/{email}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/passport.PassportService/Delete", runtime.WithHTTPPathPattern("/emails/{email_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -758,7 +758,7 @@ var (
 
 	pattern_PassportService_LogOut_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"log-out"}, ""))
 
-	pattern_PassportService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"emails", "email"}, ""))
+	pattern_PassportService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"emails", "email_id"}, ""))
 
 	pattern_PassportService_CheckToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"passport.PassportService", "CheckToken"}, ""))
 )

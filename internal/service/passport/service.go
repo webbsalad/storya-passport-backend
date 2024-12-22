@@ -13,6 +13,6 @@ type Service interface {
 	LogIn(ctx context.Context, name, password string) (model.AuthTokens, error)
 	RefreshToken(ctx context.Context, refreshToken string) (model.AuthTokens, error)
 	LogOut(ctx context.Context, userID model.UserID, deviceID model.DeviceID) error
-	Delete(ctx context.Context, userID model.UserID, email string) error
+	Delete(ctx context.Context, userID model.UserID, emailID model.EmailID) error
 	CheckToken(ctx context.Context, token string) (model.UserID, model.DeviceID, string, error)
 }

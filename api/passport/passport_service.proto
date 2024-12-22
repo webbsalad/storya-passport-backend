@@ -52,7 +52,7 @@ service PassportService {
 
     rpc Delete(DeleteRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
-            delete: "/emails/{email}"
+            delete: "/emails/{email_id}"
         };
     };
 
@@ -119,7 +119,7 @@ message UpdateUserRequest {
 }
 
 message DeleteRequest {
-    string email = 1 [(validate.rules).string.email = true];
+    string email_id = 1 [(validate.rules).string.uuid = true];
 }
 
 message CheckTokenRequest {

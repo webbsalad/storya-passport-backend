@@ -12,8 +12,8 @@ func TestService_Delete(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		userID model.UserID
-		email  string
+		userID  model.UserID
+		emailID model.EmailID
 	}
 
 	type result struct {
@@ -32,12 +32,12 @@ func TestService_Delete(t *testing.T) {
 			name: "success",
 			mocks: func(tc testCase, deps *serviceTestDeps) {
 				deps.passportRepository.EXPECT().
-					Delete(gomock.Any(), tc.args.userID, tc.args.email).
+					Delete(gomock.Any(), tc.args.userID, tc.args.emailID).
 					Return(nil)
 			},
 			args: args{
-				userID: testUserID,
-				email:  testEmail,
+				userID:  testUserID,
+				emailID: testEmailID,
 			},
 			result: result{
 				err: nil,
@@ -48,12 +48,12 @@ func TestService_Delete(t *testing.T) {
 			name: "user not found",
 			mocks: func(tc testCase, deps *serviceTestDeps) {
 				deps.passportRepository.EXPECT().
-					Delete(gomock.Any(), tc.args.userID, tc.args.email).
+					Delete(gomock.Any(), tc.args.userID, tc.args.emailID).
 					Return(model.ErrUserNotFound)
 			},
 			args: args{
-				userID: testUserID,
-				email:  testEmail,
+				userID:  testUserID,
+				emailID: testEmailID,
 			},
 			result: result{
 				err: model.ErrUserNotFound,
@@ -69,7 +69,7 @@ func TestService_Delete(t *testing.T) {
 			deps := getTestDeps(t)
 
 			tc.mocks(tc, deps)
-			err := deps.Service.Delete(deps.ctx, tc.args.userID, tc.args.email)
+			err := deps.Service.Delete(deps.ctx, tc.args.userID, tc.args.emailID)
 
 			require.ErrorIs(t, err, tc.result.err)
 
