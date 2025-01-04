@@ -12,13 +12,9 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var port = flag.Int("port", 50052, "The gRPC server port")
-
-func NewServer(s *grpc.Server) grpc.ServiceRegistrar {
-	return grpc.ServiceRegistrar(s)
-}
-
 func grpcOptions() fx.Option {
+	port := flag.Int("port", 50052, "The gRPC server port")
+
 	flag.Parse()
 
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
@@ -29,7 +25,9 @@ func grpcOptions() fx.Option {
 	return fx.Options(
 		fx.Provide(
 			grpc.NewServer,
-			NewServer,
+			func(s *grpc.Server) grpc.ServiceRegistrar {
+				return grpc.ServiceRegistrar(s)
+			},
 		),
 		fx.Invoke(
 			func(s *grpc.Server, lc fx.Lifecycle) {
